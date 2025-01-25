@@ -7,6 +7,7 @@ The main objectives are:
 - To experience with API production and dashboard integration.
 
 End Project: To deliver a web application supporting CRUD operation from data sources and can review revenue prediction results.
+
 ---
 
 ## Progress Check
