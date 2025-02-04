@@ -3,11 +3,17 @@
 ## Objective ✔️
 
 The main objectives are:
+- Be able to make prediction on the revenue of movies that will be released in the next 5-6 months. 
 - To experience on predicting box office revenue for movies using different approaches including sentiment analysis on user comments.
 - To experience with API production and dashboard integration.
 
 End Project: To deliver a web application supporting CRUD operation from data sources and can review revenue prediction results.
 
+## Research Question:
+- How do we hold sequel movie revenue accountable?
+- How to control inflation rate if we want to use early movies? (Using Consumer Price Index can be a solution)
+- How do we standardized movie revenue? (The revenue variable we have are probably gross revenue since movie released)
+- Using informations five year earlier might not be reliable (We can probably solve this question by including more covariate)
 ---
 
 ## Progress Check
