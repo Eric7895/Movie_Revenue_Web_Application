@@ -1,0 +1,100 @@
+---
+title: "Prior Work"
+author: "Eric Wu, Jeremy Long, Zheng Dong, Matteo Martone"
+date: "2025-01-30"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+## Prior Works Read
+
+-   [A Survey on Machine Learning Techniques in Movie Revenue Predictio (2020)](#a-survey-on-machine-learning-techniques-in-movie-revenue-prediction-2020)
+
+-   [A movie box office revenue prediction model based on deep multimodal features (2023)](#a-movie-box-office-revenue-prediction-model-based-on-deep-multimodal-features-2023)
+
+-   [Prevision Model and Empirical Test of Box Office Results for Sequels (2021)](#prevision-model-and-empirical-test-of-box-office-results-for-sequels-2021)
+
+## Summaries
+
+#### **A Survey on Machine Learning Techniques in Movie Revenue Predictio (2020)**
+
+This paper examines 36 scholarly articles related to movie revenue prediction, primarily using regression, classification, and clustering data mining techniques. Among these approaches, regression and classification are the most common. In classification, movies are categorized into types based on box-office performance, such as blockbuster, average, and failure. The study identifies the most popular features in predicting movie revenue, including cast (20.6%), screen count (15.5%), genre (12.0%), movie rating (10.3%), budget (9.5%), seasonality (5.2%), runtime (5.2%), and sequel status (5.2%). A notable addition is sentiment features derived from social media and movie reviews.
+
+The most common prediction algorithms in the studies reviewed include multiple linear regression and Support Vector Machines (SVM). Common evaluation metrics include Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and Average Percentage Hit Rate.
+
+##### Key Features in Movie Revenue Prediction
+
+-   **Cast**: This feature reflects the influence of actors, directors, and their popularity. It is often categorized into high, average, or low levels.
+-   **Screen**: Represents the number of theatres a movie is released in. A wider release is expected to generate more revenue.
+-   **Genre**: The genre of the movie (e.g., action, comedy, horror) affects its revenue prediction. Some studies use this feature as a categorical variable, while others assign numeric values.
+-   **Rating**: The movie's rating (e.g., G, PG, PG-13, R) influences its revenue. Movies with a 'G' rating generally tend to generate more revenue.
+-   **Budget**: The budget of the movie, often assumed to correlate with higher revenue, though this is not always the case. Some high-budget films do not generate expected returns.
+-   **Seasonality**: The time of the year when the movie is released impacts its revenue, especially during holidays or festive periods.
+-   **Sequel**: Sequel movies often expect better performance, though their success can be unpredictable. This feature is usually binary (1 or 0).
+-   **WOM (Word-of-Mouth)**: Public perception of a movie, extracted from social media reviews and other online data, is crucial for predictions.
+-   **Competition**: The level of competition from other films released around the same time (e.g., high, low, or average) can affect a movie's box-office performance.
+-   **Advertisement**: The extent of advertising for the movie, often represented as high, low, or average.
+
+##### Implications:
+
+1.  **Inadequate Benchmark Datasets**: The ever-changing nature of the movie industry makes it difficult to establish consistent benchmark datasets for revenue prediction.
+2.  **Improvement in Sentiment Analysis**: Current sentiment analysis only categorizes reviews as positive, negative, or neutral, which limits its effectiveness. A more nuanced analysis is needed.
+3.  **Sequel Movie Predictions**: Few studies focus on predicting the success of sequels, which are often unpredictable. Some studies use a binary feature for sequel status, but this doesn't capture the full complexity of sequel success.
+4.  **Data Irregularities**: Missing data and class imbalance are common issues in movie industry datasets, making predictions more challenging.
+
+#### **A movie box office revenue prediction model based on deep multimodal features (2023)**
+
+This paper proposes a **Deep Multimodal Feature Classifier Neural Network (DMFCNN)** model that combines two classifiers: a pre-trained **Residual CNN (ResNet50)** to extract visual features from movie posters and other movie metadata. The model uses **transfer learning** to improve prediction accuracy by learning from sparse image data.
+
+The **DMFCNN model** was trained on 49,857 movies collected from IMDb, spanning from 2006 to 2019, and achieved a prediction accuracy of **59.30%**. The fusion strategy used in this model outperforms existing models in terms of **precision**, **Area Under Curve (AUC)**, **sensitivity**, and **specificity**.
+
+##### Key Contributions
+
+-   **DMFCNN Model**: A hybrid deep learning model that combines visual features from movie posters with metadata for improved prediction of box-office revenue.
+-   **Transfer Learning**: Use of pre-trained models like ResNet50 allows the model to learn efficiently even with limited training data.
+-   **Improved Performance**: The model outperforms existing approaches in key metrics such as precision, AUC, sensitivity, and specificity.
+
+##### Key Features Used for Prediction
+
+-   **Poster Features**: Visual features extracted from movie posters by ResNet50, which provide information about genre and objects within the poster that can correlate with revenue.
+-   **Movie Metadata**: In addition to poster features, metadata such as movie genre, budget, and cast are also included in the prediction.
+-   **Fusion Strategy**: The model uses an optimal combination of classifiers to improve prediction accuracy, especially in financial success indicators.
+
+##### Limitations
+
+1.  **Complexity of Poster Content**: It is challenging to link the complex content of movie posters directly to box-office revenue.
+2.  **Resource-Intensive**: Training deep neural networks requires substantial computational resources, which may limit practical implementation.
+3.  **Lack of External Validation**: The model has not been tested with datasets outside the movie domain, limiting its generalizability.
+4.  **Training Data Limitations**: The model was trained on movies from 2006 to 2019 from Hollywood, which may not be applicable to other markets or time periods.
+
+##### Implications
+
+1.  **Effective Transfer Learning**: This study highlights how transfer learning is an effective technique, particularly when training data is sparse.
+2.  **Cross-Domain Potential**: The methodology could be adapted for other areas where multimodal data sources need to be fused for predictive modeling.
+3.  **Financial Success Prediction**: The ability to predict movie revenue based on both metadata and visual features may provide a more accurate forecasting tool for the entertainment industry.
+
+#### **Prevision Model and Empirical Test of Box Office Results for Sequels (2021)**
+
+Belvaux and Mencarelli (2021) examine the unique position of movie sequels in the film industry, emphasizing their strong association with original films. They critique prior studies for primarily comparing box office results between original movies and their sequels without accounting for this intrinsic connection.
+
+Utilizing the **accessibility-diagnosticity framework**, the authors investigate factors contributing to a sequel's success, with a particular focus on the influence of **reviews of the original film**. Their analysis, based on a dataset of **232 films** (comprising **116 original movies and their corresponding sequels**), reveals that **reviews of the original movie have a direct impact on the sequel's box office performance**.
+
+##### Key Contribution
+
+-   **Critical Evaluation of Prior Models**: The study critiques existing models for not adequately considering the unique relationship between original films and their sequels in box office performance evaluations.\
+-   **Empirical Analysis**: Through an empirical study of **232 films**, the research demonstrates the **direct influence of original movie reviews on the box office performance of sequels**.
+
+##### Implications
+
+1.  **Strategic Planning for Sequels**: Studios should consider the critical reception of original films when planning sequels, as **positive reviews can significantly impact the sequel's success**.\
+2.  **Marketing Strategies**: Understanding the **direct link between original movie reviews and sequel performance** can inform marketing strategies to **leverage positive perceptions**.
+
+## Reference
+
+-   Ahmad, I.S., Bakar, A.A., Yaakub, M.R. et al. A Survey on Machine Learning Techniques in Movie Revenue Prediction. SN COMPUT. SCI. 1, 235 (2020). <https://doi.org/10.1007/s42979-020-00249-1>
+
+-   Belvaux, B., & Mencarelli, R. (2021). Prevision model and empirical test of box office results for sequels. Journal of Business Research, 130, 38–48. <https://doi.org/10.1016/j.jbusres.2021.03.008>
+
+-   Madongo, C.T., Zhongjun, T. A movie box office revenue prediction model based on deep multimodal features. Multimed Tools Appl 82, 31981–32009 (2023). <https://doi.org/10.1007/s11042-023-14456-4>
