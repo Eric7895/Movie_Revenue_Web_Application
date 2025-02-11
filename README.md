@@ -15,7 +15,10 @@ End Project: To deliver a web application supporting CRUD operation from data so
 - How do we standardize movie revenue? (The revenue variable we have is probably gross revenue since the movie's release.)
 - Using information from five years earlier might not be reliable. (We can probably solve this issue by including more covariates.)
 ---
-
+## Data Source:
+- https://github.com/zhengbrody/Movie-Revenue-Prediction/tree/main/movies.csv
+- 
+---
 ## Progress Check
 
 ### 0. **Set Up**
