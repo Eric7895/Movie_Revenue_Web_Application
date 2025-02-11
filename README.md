@@ -17,6 +17,8 @@ End Project: To deliver a web application supporting CRUD operation from data so
 ---
 ## Data Source:
 - https://github.com/zhengbrody/Movie-Revenue-Prediction/tree/main/movies.csv
+- https://www.the-numbers.com/movies/release-schedule (For future movie release)
+- https://developer.imdb.com/non-commercial-datasets/ (Official data provided by imdb)
 - 
 ---
 ## Progress Check
