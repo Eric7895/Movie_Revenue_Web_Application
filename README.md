@@ -12,8 +12,8 @@ End Project: To deliver a web application supporting CRUD operation from data so
 ## Research Question:
 - How do we hold sequel movie revenue accountable?
 - How can we control the inflation rate if we want to use early movies? (Using the Consumer Price Index could be a solution.)
-- How do we standardize movie revenue? (The revenue variable we have is probably gross revenue since the movie's release.)
-- Using information from five years earlier might not be reliable. (We can probably solve this issue by including more covariates.)
+- How do we standardize movie revenue? (The revenue variable we have is probably gross revenue since the movie's release, we can try to classified movie revenue into categories to standardized it to certain extent)
+- Using information from five years earlier might not be reliable. (We can probably solve this issue by including more covariates)
 ---
 ## Data Source:
 - https://github.com/zhengbrody/Movie-Revenue-Prediction/tree/main/movies.csv
