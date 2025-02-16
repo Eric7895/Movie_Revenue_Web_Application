@@ -1,0 +1,3 @@
+The files are stored in google drive.
+Documentation - https://developer.imdb.com/non-commercial-datasets/
+Source - https://datasets.imdbws.com/
