@@ -29,7 +29,7 @@ End Project: To deliver a web application supporting CRUD operation from data so
 - **Github Repo** ✔️
 - **Python Environment** ✔️
 - **Power BI OR Tableau Access** ✔️
-### 1. **Literature Review** ✔️
+### 1. **Literature Review** ✔️ (But will continue)
 - **Key Questions To Answer**: Possible Data Sources, Possible Models, Guide to preprocessing, Possible Approaches
 ### 2. **Gathering Data Source** ✔️ (But will continue)
 - **Possible Data Sources**: IMDB (https://www.imdb.com), Box Office Mojo (https://www.boxofficemojo.com)
