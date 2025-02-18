@@ -16,6 +16,9 @@ output:
 
 -   [Prevision Model and Empirical Test of Box Office Results for Sequels (2021)](#prevision-model-and-empirical-test-of-box-office-results-for-sequels-2021)
 
+-   [Presenting a Larger Up-to-Date Movie Dataset and Investigating the Effects of Pre-Released Attributes on Gross Revenue (2021)](#presenting-a-larger-up-to-date-movie-dataset-and-investigating-the-effects-of-pre-released-attributes-on-gross-revenue-2021)
+
+
 ## Summaries
 
 #### **A Survey on Machine Learning Techniques in Movie Revenue Prediction (2020)**
@@ -91,6 +94,24 @@ Utilizing the **accessibility-diagnosticity framework**, the authors investigate
 1.  **Strategic Planning for Sequels**: Studios should consider the critical reception of original films when planning sequels, as **positive reviews can significantly impact the sequel's success**.\
 2.  **Marketing Strategies**: Understanding the **direct link between original movie reviews and sequel performance** can inform marketing strategies to **leverage positive perceptions**.
 
+
+#### **Presenting a Larger Up-to-Date Movie Dataset and Investigating the Effects of Pre-Released Attributes on Gross Revenue (2021)**
+
+This paper introduces a large dataset extracted from IMDb, containing summary information on 7.5 million titles and detailed data on over 200,000 movies. The authors analyze pre-release attributes like budget, runtime, genre, and star power to predict box office revenue. Statistical analysis reveals significant correlations between budget, star power, and release timing with revenue. They implement machine learning models to classify movies into ten revenue-based categories, achieving a one-class-away accuracy of nearly 60%.
+
+##### Key Features in Movie Revenue Prediction:
+- **Budget**: Strong correlation with revenue, as higher budgets often translate to better marketing and production quality.
+- **Star Power**: The involvement of high-profile actors and directors significantly impacts revenue generation.
+- **Release Timing**: Movies released during peak seasons, such as summer and holidays, tend to perform better.
+- **Genre**: Certain genres, like action and adventure, generally yield higher box office returns.
+- **Machine Learning Models**: Logistic regression, random forests, and ensemble methods were tested, but accuracy remained limited.
+
+##### Implications:
+1. **Importance of Comprehensive Datasets**: The study emphasizes the need for up-to-date and extensive datasets for revenue prediction.
+2. **Challenges in Prediction**: While some attributes show strong correlations, overall prediction accuracy remains moderate, indicating the complexity of revenue forecasting.
+3. **Potential for Improvement**: Further research incorporating external factors like marketing campaigns and social media sentiment could enhance prediction models.
+
+
 ## Reference
 
 -   Ahmad, I.S., Bakar, A.A., Yaakub, M.R. et al. A Survey on Machine Learning Techniques in Movie Revenue Prediction. SN COMPUT. SCI. 1, 235 (2020). <https://doi.org/10.1007/s42979-020-00249-1>
@@ -98,3 +119,6 @@ Utilizing the **accessibility-diagnosticity framework**, the authors investigate
 -   Belvaux, B., & Mencarelli, R. (2021). Prevision model and empirical test of box office results for sequels. Journal of Business Research, 130, 38–48. <https://doi.org/10.1016/j.jbusres.2021.03.008>
 
 -   Madongo, C.T., Zhongjun, T. A movie box office revenue prediction model based on deep multimodal features. Multimed Tools Appl 82, 31981–32009 (2023). <https://doi.org/10.1007/s11042-023-14456-4>
+
+-   Sharma, A. S., Roy, T., Rifat, S. A., & Mridul, M. A. (2021). *Presenting a Larger Up-to-Date Movie Dataset and Investigating the Effects of Pre-Released Attributes on Gross Revenue*. Journal of Computer Science, 17(10), 870-888. DOI: [10.3844/jcssp.2021.870.888](https://doi.org/10.3844/jcssp.2021.870.888)
+
