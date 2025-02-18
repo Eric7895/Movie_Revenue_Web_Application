@@ -20,6 +20,7 @@ End Project: To deliver a web application supporting CRUD operation from data so
 - https://www.the-numbers.com/movies/release-schedule (For future movie release)
 - https://developer.imdb.com/non-commercial-datasets/ (Official data provided by imdb)
 - https://github.com/LearnDataSci/articles/blob/master/Python%20Pandas%20Tutorial%20A%20Complete%20Introduction%20for%20Beginners/IMDB-Movie-Data.csv
+- https://arxiv.org/pdf/2405.11651v1 
 ---
 ## Progress Check
 
