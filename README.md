@@ -40,6 +40,7 @@ End Project: To deliver a web application supporting CRUD operation from data so
 ### 3. **Preprocess the Data (Create dependent variables)**
 ### 4.a **Machine Learning Notebook**
 - Create baseline models (Suggested black-box models like MLP)
+- Create dummy models using existed data source as benchmark (Alternative to the baseline models)
 ### 4.b **Web API Application**
 ### 4.c **Tableau Dashboard**
 ### 5 **Final Integration**
