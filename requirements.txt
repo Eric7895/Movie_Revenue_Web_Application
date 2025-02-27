@@ -48,6 +48,7 @@ dill=0.3.8=pyhd8ed1ab_0
 dnspython=2.7.0=pyhff2d567_1
 email-validator=2.2.0=pyhd8ed1ab_1
 email_validator=2.2.0=hd8ed1ab_1
+et_xmlfile=2.0.0=pyhd8ed1ab_1
 exceptiongroup=1.2.2=pyhd8ed1ab_1
 executing=2.1.0=pyhd8ed1ab_1
 fastapi=0.115.6=pyhd8ed1ab_0
@@ -131,6 +132,7 @@ nest-asyncio=1.6.0=pyhd8ed1ab_1
 networkx=3.3=pypi_0
 numpy=2.2.2=py313hefb8edb_0
 opencl-headers=2024.10.24=he0c23c2_0
+openpyxl=3.1.5=py313he57e174_1
 openssl=3.4.1=ha4e3fda_0
 orc=2.0.3=haf104fe_2
 packaging=24.2=pyhd8ed1ab_2

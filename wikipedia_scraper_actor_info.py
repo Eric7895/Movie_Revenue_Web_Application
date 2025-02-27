@@ -1,179 +1,229 @@
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
+import os
 import time
 import pickle
+import urllib.parse
+import requests
+import openpyxl
+import pandas as pd
+from bs4 import BeautifulSoup
 
-def get_movie_name() -> list:
-    """
-    This function gets all movie names from balanced.csv
-    """
-    path = 'data/balanced.csv'
-    df = pd.read_csv(path)
 
-    return list(df['primaryTitle'])
+# ==============================
+#           HELPERS
+# ==============================
+
+def get_stopping_point() -> int:
+    """Retrieve the last stopping index to resume scraping after failure."""
+    filename = "wikipedia scraper/stopping_point.txt"
+    if os.path.exists(filename):
+        with open(filename, "r") as file:
+            try:
+                return int(file.read().strip())  # Read last index
+            except ValueError:
+                return 0  # Default to 0 if file is corrupted
+    return 0  # Start fresh if file doesn't exist
+
+
+def save_stopping_point(index: int) -> None:
+    """Save the current stopping point to allow resumption after failure."""
+    filename = "wikipedia scraper/stopping_point.txt"
+    with open(filename, "w") as file:
+        file.write(str(index))
+
+
+def save_requested_data(data: list, filename: str) -> None:
+    """Save scraped HTML content using pickle."""
+    with open(filename, 'wb') as file:
+        pickle.dump(data, file)
+    print(f"Data saved to {filename}.")
+
+
+def load_requested_data(filename: str) -> list:
+    """Load previously saved HTML content."""
+    if os.path.exists(filename):
+        with open(filename, 'rb') as file:
+            data = pickle.load(file)
+        print(f"Data loaded from {filename}.")
+        return data
+    print(f"File {filename} not found. Please scrape data first.")
+    return []
+
+
+def get_movie_list() -> tuple[pd.DataFrame, set]:
+    """Retrieve movie names and years from balanced.csv, filtering out already scraped movies."""
+    path_movies = 'data/balanced.csv'
+    df_movies = pd.read_csv(path_movies)
+
+    path_scraped = 'wikipedia scraper/temp_actor.csv'
+    if os.path.exists(path_scraped):
+        df_scraped = pd.read_csv(path_scraped)
+        scraped_movies = set(df_scraped['name'].astype(str))  # Convert to set for fast lookup
+    else:
+        print("temp_actor.csv not found. Scraping all movies.")
+        scraped_movies = set()
+
+    target_movies = df_movies[['primaryTitle', 'startYear']].drop_duplicates()
+    target_movies = target_movies[~target_movies['primaryTitle'].isin(scraped_movies)]
+
+    return target_movies, scraped_movies
+
 
 def format_movie_name(title: str) -> str:
-    """
-    This function replaces spaces with underscores and special characters
-    with their URL-encoded equivalents.
-    """
-    title = title.replace(" ", "_")  # Replace spaces with underscores
-    title = title.replace("&", "%26")  # Replace ampersands with %26
-    title = title.replace("'", "%27")  # Replace apostrophes with %27
-    title = title.replace(",", "%2C")  # Replace commas with %2C
-    title = title.replace(":", "%3A")  # Replace colons with %3A
-    title = title.replace("#", "%23")   # Replace hash symbol with %23
-    title = title.replace("$", "%24")   # Replace dollar symbol with %24
-    title = title.replace("%", "%25")   # Replace percent symbol with %25
-    title = title.replace("(", "%28")   # Replace open parenthesis with %28
-    title = title.replace(")", "%29")   # Replace close parenthesis with %29
-    title = title.replace("*", "%2A")   # Replace asterisk with %2A
-    title = title.replace("+", "%2B")   # Replace plus with %2B
-    title = title.replace("=", "%3D")   # Replace equal sign with %3D
-    title = title.replace("?", "%3F")   # Replace question mark with %3F
-    title = title.replace("@", "%40")   # Replace @ symbol with %40
-    title = title.replace("/", "%2F")   # Replace forward slash with %2F
-    title = title.replace("[", "%5B")   # Replace open bracket with %5B
-    title = title.replace("]", "%5D")   # Replace close bracket with %5D
-    title = title.replace("^", "%5E")   # Replace caret with %5E
-    title = title.replace("{", "%7B")   # Replace open curly bracket with %7B
-    title = title.replace("}", "%7D")   # Replace close curly bracket with %7D
-    title = title.replace("|", "%7C")   # Replace pipe symbol with %7C
-    title = title.replace("~", "%7E")   # Replace tilde with %7E
-    return title
+    """Format movie title by replacing spaces with underscores and encoding special characters."""
+    return urllib.parse.quote(title.replace(" ", "_"), safe="_")
 
-def request_all_movie(names: list) -> list:
-    """
-    This function requestes all destinated wikipedia page. 
-    """
+
+# ==============================
+#       WEB SCRAPING
+# ==============================
+
+def request_all_movies(movies: pd.DataFrame, start_index: int = 0) -> list:
+    """Fetch Wikipedia pages for each movie, trying three URL variations."""
     result = []
-    header = {
+    headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
     }
 
-    i = 0
-    for name in names:
-        url = f'https://en.wikipedia.org/wiki/{name}'
-        r = requests.get(url, headers=header)
-        if r.status_code != 200:
-            print(f"Movie not found: {name}")
-            # Try appending '_(film)' to the name if the movie is not found
-            url = f'https://en.wikipedia.org/wiki/{name}_%28film%29'
-            r = requests.get(url, headers=header)
-            if r.status_code != 200:
-                print(f"Also not found with '_(film)' added: {name}")
-            else:
-                print(f"Index {i} - Found movie with '_(film)' added: {name}")
-                i += 1
-        else:
-            result.append(r.text)
-            print(f"Index {i} - Found movie: {name}")
-            i += 1
+    for i in range(start_index, len(movies)):
+        name, year = movies.iloc[i, 0], movies.iloc[i, 1]
+        urls = [
+            f'https://en.wikipedia.org/wiki/{name}',
+            f'https://en.wikipedia.org/wiki/{name}_%28film%29',
+            f'https://en.wikipedia.org/wiki/{name}_%28{year}_film%29'
+        ]
 
-        time.sleep(1)  # Introduce a delay of 1 second between requests to avoid rate limiting
+        for url in urls:
+            try:
+                response = requests.get(url, headers=headers)
+                if response.status_code == 200:
+                    result.append(response.text)
+                    print(f"Index {i}: Found movie page - {url}")
+                    save_stopping_point(i)  # Save progress
+                    break  # Stop trying once a valid page is found
+                else:
+                    print(f"Index {i}: Movie not found - {url}")
+            except requests.ConnectionError:
+                print(f"Index {i}: Connection error. Stopping...")
+                save_stopping_point(i)
+                return result  # Stop and save progress
+
+        time.sleep(1)  # Delay to avoid rate limiting
 
     return result
 
 
-def save_requested_data(data: list, filename: str):
-    """
-    This function saves the scraped data to an external file (using pickle).
-    """
-    with open(filename, 'wb') as file:
-        pickle.dump(data, file)
-    print(f"Data has been saved to {filename}.")
+# ==============================
+#       HTML PARSING
+# ==============================
 
-def load_requested_data(filename: str) -> list:
-    """
-    This function loads the scraped data from an external file.
-    """
-    try:
-        with open(filename, 'rb') as file:
-            data = pickle.load(file)
-        print(f"Data has been loaded from {filename}.")
-        return data
-    except FileNotFoundError:
-        print(f"File {filename} not found. Please scrape the data first.")
-        return []
-
-def parse_single_html(html: str) -> str:
-    '''
-    This function acts as an html parser for the webpages.
-    '''
+def parse_movie_html(html: str) -> dict | None:
+    """Extract movie name and cast from Wikipedia infobox."""
     soup = BeautifulSoup(html, "html.parser")
-    data = []
-    table_section = (
-        soup.find_all("table", class_ = "infobox vevent")
-    )
+    tables = soup.find_all("table", class_="infobox vevent")
 
-    table_section = soup.find_all("table", class_="infobox vevent")
+    if not tables:
+        return None  # No infobox found, likely an incorrect page
 
-    for table in table_section:  # Iterate through the tables
+    for table in tables:
         title = table.find("th", class_="infobox-above summary")
         if title:
             movie_name = title.get_text()
+            starring_headers = ["Starring", "Cast"]
 
-            starring_header = soup.find("th", string="Starring")
+            for keyword in starring_headers:
+                starring_header = soup.find("th", string=keyword)
+                if starring_header:
+                    starring_data = starring_header.find_next_sibling("td")
+                    if starring_data:
+                        actors = [li.get_text(strip=True) for li in starring_data.find_all("li")]
+                        return {'name': movie_name, 'actors': actors}
 
-            if starring_header:
-                starring_data = starring_header.find_next_sibling("td")
-    
-                if starring_data:
-                    # Step 3: Extract actor names (from <a> tags inside <li>)
-                    actors = [a.get_text() for a in starring_data.find_all("a")]
+            return {'name': movie_name, 'actors': []}  # No actors found
 
-                data.append({
-                    'name': movie_name,
-                    'actors': actors
-                })
-        
-    return data
-    
-def scraper():
-    '''
-    This function tries to scrap as much as web page as possible - First attempt
-    '''
-    names = get_movie_name()
-    formatted_names = [format_movie_name(name) for name in names]
-    
-    # Try to load previously scraped data, if available
-    filename = "scraped_data.pkl"
-    requested_list = load_requested_data(filename)
+    return None  # No valid movie title found
 
-    # If data is empty (not loaded), scrape the data
-    if not requested_list:
-        requested_list = request_all_movie(formatted_names)
-        # Save the scraped data for future use
-        save_requested_data(requested_list, filename)
 
-    # Debug: Print movies that weren't scraped successfully
-    for i, name in enumerate(formatted_names):
-        if i >= len(requested_list):
-            print(f"Movie not found: {name}")
+# ==============================
+#       MAIN SCRAPER
+# ==============================
 
-    # Proceed with the next steps (e.g., process the scraped data)
-    if len(requested_list) == len(formatted_names):
-        print('All movies captured successfully.')
+def scraper() -> None:
+    """Main scraping function: retrieves movie data and saves HTML pages."""
+    target_movies, _ = get_movie_list()
+    target_movies['primaryTitle'] = target_movies['primaryTitle'].map(format_movie_name)
+
+    filename = 'wikipedia scraper/scraped_data.pkl'
+    scraped_data = load_requested_data(filename)
+    start_index = get_stopping_point()
+
+    if not scraped_data:
+        scraped_data = request_all_movies(target_movies, start_index)
     else:
-        print(f"Some movies were not captured. Total found: {len(requested_list)}, Total expected: {len(formatted_names)}")
+        print(f"Resuming scraping from index {start_index}...")
+        new_data = request_all_movies(target_movies, start_index)
+        scraped_data.extend(new_data)
 
-def process_scraper():
-    '''
-    This function process the html page that we scraped. 
-    '''
-    # Read the requested data into a list
-    filename = "scraped_data.pkl"
-    requested_list = load_requested_data(filename)
+    save_requested_data(scraped_data, filename)
+    print("\nScraping completed.\n")
 
-    data = []
 
-    for movie in requested_list:
-        data.extend(parse_single_html(movie))
+def parser() -> None:
+    """Parse HTML content and store extracted movie-actor data."""
+    filename = "wikipedia scraper/scraped_data.pkl"
+    scraped_data = load_requested_data(filename)
+    temp_actor_path = "wikipedia scraper/temp_actor.csv"
+
+    if os.path.exists(temp_actor_path):
+        df_existing = pd.read_csv(temp_actor_path)
+        existing_names = set(df_existing['name'])
+    else:
+        df_existing = pd.DataFrame(columns=['name', 'actors'])
+        existing_names = set()
+
+    new_data = []
+    for index, html in enumerate(scraped_data):
+        print(f'Processing index: {index}')
+        record = parse_movie_html(html)
+
+        if record and record["name"] not in existing_names:
+            new_data.append(record)
+            existing_names.add(record["name"])
+
+    if new_data:
+        df_new = pd.DataFrame(new_data)
+        df_combined = pd.concat([df_existing, df_new], ignore_index=True).drop_duplicates(subset='name')
+        df_combined.to_csv(temp_actor_path, index=False)
+        print(f"Updated actor dataset. Total records: {len(df_combined)}")
+    else:
+        print("No new data to append.")
+
+
+# ==============================
+#   CLEANING & FINAL DATASET
+# ==============================
+
+def clean_dataset() -> None:
+    """Merge scraped actor data with balanced dataset and generate the final dataset."""
+    df_movies = pd.read_csv("data/balanced.csv")
+    df_actors = pd.read_csv("wikipedia scraper/temp_actor.csv")
+
+    merged_df = df_movies.merge(df_actors, left_on="primaryTitle", right_on="name", how="left")
+    merged_df = merged_df.drop(columns=['name'])
     
-    df = pd.DataFrame(data)
-    print(f'Shape of the data: {df.shape}')
-    temp_actor = df.to_csv('temp_actor.csv')
+    merged_df.to_excel('data/final_dataset.xlsx', index=False)
+    merged_df.to_csv('data/final_dataset.csv', index=False)
+    print("\nFinal dataset saved as 'final_dataset.csv'.\n")
+
+
+def dataset_summary() -> None:
+    """Print summary statistics of the final dataset."""
+    df = pd.read_csv('data/final_dataset.csv')
+    print(df.info())
+    print(df.describe())
+
 
 if __name__ == '__main__':
-    process_scraper()
+    #scraper()
+    #parser()
+    clean_dataset()
+    dataset_summary()
