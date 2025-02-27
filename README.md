@@ -37,10 +37,11 @@ End Project: To deliver a web application supporting CRUD operation from data so
 ### 2. **Gathering Data Source** ✔️ (But will continue)
 - **Possible Data Sources**: IMDB (https://www.imdb.com), Box Office Mojo (https://www.boxofficemojo.com)
 - **Popular Features**: Cast, number of screen or theatres that the movie will be released on, genre, rating, budget, seasonality (time of release), whether it's sequel, word-of-mouth (number of views, number of likes, and percentage of positive and negative reviews), level of competition of a movie (whether it's released with other popular movies or not), level of advertisements.
-### 3. **Preprocess the Data (Create dependent variables)**
+### 3.a **Create a Reference Model for Benchmark**
+- Using only a handful of important variables (subjective) to create reference model for benchmark purpose.
+### 3.b **Preprocess the Data (Create dependent variables)**
 ### 4.a **Machine Learning Notebook**
-- Create baseline models (Suggested black-box models like MLP)
-- Create dummy models using existed data source as benchmark (Alternative to the baseline models)
+- Create baseline models (Suggested black-box models like MLP) 
 ### 4.b **Web API Application**
 ### 4.c **Tableau Dashboard**
 ### 5 **Final Integration**
