@@ -225,5 +225,5 @@ def dataset_summary() -> None:
 if __name__ == '__main__':
     #scraper()
     #parser()
-    clean_dataset()
+    #clean_dataset()
     dataset_summary()
