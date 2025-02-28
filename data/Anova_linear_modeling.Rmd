@@ -1,0 +1,82 @@
+---
+title: "ANOVA + Linear Modeling"
+author: "Matteo Martone"
+date: "2025-02-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## Load in
+
+```{r}
+df <- read.csv("final_dataset.csv", stringsAsFactors = FALSE)
+```
+
+## Anova on Cat Var
+
+way too long and too many options cannot run atm
+
+```{r}
+"
+# One-Way ANOVA for Genre vs Revenue
+anova_genre <- aov(revenue ~ Genre, data = df)
+summary(anova_genre)
+
+# One-Way ANOVA for Directors vs Revenue
+anova_directors <- aov(revenue ~ directors, data = df)
+summary(anova_directors)
+
+# One-Way ANOVA for Original Language vs Revenue
+anova_language <- aov(revenue ~ original_language, data = df)
+summary(anova_language)
+
+# One-Way ANOVA for Movie Status (e.g., Released, Canceled) vs Revenue
+anova_status <- aov(revenue ~ status, data = df)
+summary(anova_status)
+"
+```
+
+## Linear Reg: Pred Rev
+
+```{r}
+lm1 <- lm(revenue ~ budget, data = df)
+summary(lm1)
+
+
+
+# Scatterplot with regression line
+ggplot(df, aes(x = budget, y = revenue)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", color = "red") +
+  scale_x_log10() + scale_y_log10() +
+  labs(title = "Budget vs Revenue", x = "Budget (log scale)", y = "Revenue (log scale)")
+
+```
+
+## Mult Lin Reg: Rev Pred Model
+
+```{r}
+lm2 <- lm(revenue ~ budget + popularity + vote_count + runtime, data = df) 
+
+summary(lm2)
+```
+
+## Assumptions
+
+```{r}
+par(mfrow = c(2,2))  # Arrange plots in a 2x2 grid
+plot(lm2)
+
+```
+
+## Interaction Effects
+
+```{r}
+lm_interaction <- lm(revenue ~ budget * Genre, data = df)
+summary(lm_interaction)
+
+```
