@@ -120,7 +120,7 @@ ggplot(df, aes(x = budget, y = revenue)) +
 
 ```
 
-## Impact of Popularity on Revenue 
+## Impact of Popularity on Revenue
 
 wont use popularity later as its not a pre-release stat but good to look at now
 
