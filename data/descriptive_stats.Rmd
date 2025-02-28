@@ -1,0 +1,185 @@
+---
+title: "Descriptive Stats"
+author: "Matteo Martone"
+date: "2025-02-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Libraries and Data
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(corrplot)
+library(GGally)
+library(gridExtra)
+
+# Read in the dataset (Assuming CSV is in the working directory)
+df <- read.csv("final_dataset.csv", stringsAsFactors = FALSE)
+
+# Convert categorical variables to factors
+df$Genre <- as.factor(df$Genre)
+df$directors <- as.factor(df$directors)
+df$writers <- as.factor(df$writers)
+df$original_language <- as.factor(df$original_language)
+df$status <- as.factor(df$status)
+df$year_released <- as.numeric(df$year_released)
+
+# Convert budget and revenue to numeric (remove commas if needed)
+df$budget <- as.numeric(gsub(",", "", df$budget))
+df$revenue <- as.numeric(gsub(",", "", df$revenue))
+df$runtime <- as.numeric(df$runtime)
+df$vote_average <- as.numeric(df$vote_average)
+df$vote_count <- as.numeric(df$vote_count)
+df$numVotes <- as.numeric(df$numVotes)
+df$popularity <- as.numeric(df$popularity)
+df$trailer_views <- as.numeric(df$trailer_views)
+df$trailer_likes <- as.numeric(df$trailer_likes)
+
+```
+
+## Summary Stats
+
+```{r}
+# Basic summary statistics for numeric variables
+summary_stats <- df %>%
+  summarise(
+    Mean_Budget = mean(budget, na.rm = TRUE),
+    Median_Budget = median(budget, na.rm = TRUE),
+    SD_Budget = sd(budget, na.rm = TRUE),
+    Mean_Revenue = mean(revenue, na.rm = TRUE),
+    Median_Revenue = median(revenue, na.rm = TRUE),
+    SD_Revenue = sd(revenue, na.rm = TRUE),
+    Mean_Runtime = mean(runtime, na.rm = TRUE),
+    Mean_Vote_Average = mean(vote_average, na.rm = TRUE),
+    Mean_Popularity = mean(popularity, na.rm = TRUE)
+  )
+print(summary_stats)
+
+```
+
+## Correlation Analysis
+
+```{r}
+# revenue focused
+# Select random numerical variables to test (Not all)
+correlation_matrix <- df %>%
+  select(budget, revenue, runtime, vote_average, vote_count, popularity, trailer_views, trailer_likes, numVotes) %>%
+  cor(use = "complete.obs")
+
+# Visualize correlation matrix
+corrplot(correlation_matrix, method = "color", type = "upper", tl.cex = 0.8)
+
+```
+
+## Distribution of Budget and Revenue
+
+```{r}
+# Histogram for Revenue
+ggplot(df, aes(x = revenue)) +
+  geom_histogram(bins = 50, fill = "blue", alpha = 0.7) +
+  scale_x_log10() + 
+  labs(title = "Distribution of Movie Revenue", x = "Revenue (log scale)", y = "Count")
+
+# Histogram for Budget
+ggplot(df, aes(x = budget)) +
+  geom_histogram(bins = 50, fill = "red", alpha = 0.7) +
+  scale_x_log10() + 
+  labs(title = "Distribution of Movie Budget", x = "Budget (log scale)", y = "Count")
+
+```
+
+## Boxplot: Budget vs. Revenue
+
+```{r}
+
+# way to many genre to show this
+
+ggplot(df, aes(x = as.factor(Genre), y = revenue)) +
+  geom_boxplot(fill = "lightblue") +
+  scale_y_log10() +
+  labs(title = "Revenue Distribution by Genre", x = "Genre", y = "Revenue (log scale)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+## Scatterplot: Budget vs. Revenue
+
+```{r}
+ggplot(df, aes(x = budget, y = revenue)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", color = "red") +
+  scale_x_log10() + scale_y_log10() +
+  labs(title = "Budget vs. Revenue", x = "Budget (log scale)", y = "Revenue (log scale)")
+
+```
+
+## Impact of Popularity on Revenue 
+
+wont use popularity later as its not a pre-release stat but good to look at now
+
+```{r}
+ggplot(df, aes(x = popularity, y = revenue)) +
+  geom_point(alpha = 0.5, color = "green") +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Popularity vs. Revenue", x = "Popularity", y = "Revenue")
+
+```
+
+## Categorical Impact: Directors, Cast, Language
+
+```{r}
+# Revenue by Director (Top 10)
+top_directors <- df %>%
+  group_by(directors) %>%
+  summarise(Mean_Revenue = mean(revenue, na.rm = TRUE)) %>%
+  arrange(desc(Mean_Revenue)) %>%
+  head(10)
+
+ggplot(top_directors, aes(x = reorder(directors, Mean_Revenue), y = Mean_Revenue)) +
+  geom_bar(stat = "identity", fill = "purple") +
+  coord_flip() +
+  labs(title = "Top 10 Directors by Average Revenue", x = "Director", y = "Average Revenue")
+
+# Revenue by Cast (Top 10)
+top_cast <- df %>%
+  group_by(actors) %>%
+  summarise(Mean_Revenue = mean(revenue, na.rm = TRUE)) %>%
+  arrange(desc(Mean_Revenue)) %>%
+  head(10)
+
+ggplot(top_cast, aes(x = reorder(actors, Mean_Revenue), y = Mean_Revenue)) +
+  geom_bar(stat = "identity", fill = "purple") +
+  coord_flip() +
+  labs(title = "Top 10 Actors by Average Revenue", x = "Cast", y = "Average Revenue")
+
+# Revenue by Language (Top 10)
+top_language <- df %>%
+  group_by(original_language) %>%
+  summarise(Mean_Revenue = mean(revenue, na.rm = TRUE)) %>%
+  arrange(desc(Mean_Revenue)) %>%
+  head(10)
+
+ggplot(top_language, aes(x = reorder(original_language, Mean_Revenue), y = Mean_Revenue)) +
+  geom_bar(stat = "identity", fill = "purple") +
+  coord_flip() +
+  labs(title = "Top 10 Languages by Average Revenue", x = "Language", y = "Average Revenue")
+```
+
+## Time Series ??
+
+need to fix good to look at
+
+```{r}
+ggplot(df, aes(x = year_released, y = revenue)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "loess", color = "blue") +
+  labs(title = "Revenue Trends Over Time", x = "Year Released", y = "Revenue")
+
+```
