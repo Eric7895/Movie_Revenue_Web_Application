@@ -37,6 +37,7 @@ click=8.1.8=pyh7428d3b_0
 colorama=0.4.6=pyhd8ed1ab_1
 comm=0.2.2=pyhd8ed1ab_1
 contourpy=1.3.1=pypi_0
+cpi=2.0.5=pypi_0
 cpython=3.13.1=py313hd8ed1ab_105
 cryptography=44.0.0=py313h9d39bda_0
 cuda-version=12.8=h5d125a7_3
