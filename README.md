@@ -25,6 +25,7 @@ End Project: To deliver a web application supporting CRUD operation from data so
 - https://github.com/vikranth3140/movie-revenue-prediction
 - https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies
 - https://www.kaggle.com/datasets/ashpalsingh1525/imdb-movies-dataset
+- https://github.com/arnab-api/movie-analysis
 ---
 ## Progress Check
 
