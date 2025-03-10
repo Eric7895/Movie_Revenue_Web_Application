@@ -157,6 +157,6 @@ def parser(year: int) -> None:
     print(f"Successfully parsed actor data. Total records: {len(actor)}")
 
 if __name__ == "__main__":
-    year = 2023
+    year = 2020
     scraper(year)
     parser(year)
