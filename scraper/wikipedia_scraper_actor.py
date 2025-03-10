@@ -7,6 +7,9 @@ import openpyxl
 import pandas as pd
 from bs4 import BeautifulSoup
 
+# Base directories
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Moves up
+DATA_DIR = os.path.join(BASE_DIR, "data")
 
 # ==============================
 #           HELPERS
@@ -51,7 +54,7 @@ def load_requested_data(filename: str) -> list:
 
 def get_movie_list() -> tuple[pd.DataFrame, set]:
     """Retrieve movie names and years from balanced.csv, filtering out already scraped movies."""
-    path_movies = 'data/balanced.csv'
+    path_movies = os.path.join(DATA_DIR, "balanced.csv")
     df_movies = pd.read_csv(path_movies)
 
     path_scraped = 'wikipedia scraper/temp_actor.csv'
@@ -169,7 +172,7 @@ def scraper() -> None:
 
 def parser() -> None:
     """Parse HTML content and store extracted movie-actor data."""
-    filename = "wikipedia scraper/scraped_data.pkl"
+    filename = 'wikipedia scraper/scraped_data.pkl'
     scraped_data = load_requested_data(filename)
     temp_actor_path = "wikipedia scraper/temp_actor.csv"
 
@@ -204,20 +207,20 @@ def parser() -> None:
 
 def clean_dataset() -> None:
     """Merge scraped actor data with balanced dataset and generate the final dataset."""
-    df_movies = pd.read_csv("data/balanced.csv")
+    df_movies = pd.read_csv(os.path.join(DATA_DIR, "balanced.csv"))
     df_actors = pd.read_csv("wikipedia scraper/temp_actor.csv")
 
     merged_df = df_movies.merge(df_actors, left_on="primaryTitle", right_on="name", how="left")
     merged_df = merged_df.drop(columns=['name'])
     
-    merged_df.to_excel('data/final_dataset.xlsx', index=False)
-    merged_df.to_csv('data/final_dataset.csv', index=False)
+    merged_df.to_excel(os.path.join(DATA_DIR, "final_dataset.xlsx"), index=False)
+    merged_df.to_csv(os.path.join(DATA_DIR, "final_dataset.csv"), index=False)
     print("\nFinal dataset saved as 'final_dataset.csv'.\n")
 
 
 def dataset_summary() -> None:
     """Print summary statistics of the final dataset."""
-    df = pd.read_csv('data/final_dataset.csv')
+    df = pd.read_csv(os.path.join(DATA_DIR, "final_dataset.csv"))
     print(df.info())
     print(df.describe())
 
