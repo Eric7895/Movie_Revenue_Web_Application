@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup
 
 def save_requested_data(data: list, filename: str) -> None:
     """Save scraped HTML content using pickle."""
+    os.makedirs(os.path.dirname(filename), exist_ok=True)  # Ensure the directory exists
+    
     with open(filename, 'wb') as file:
         pickle.dump(data, file)
     print(f"Data saved to {filename}.")
@@ -125,7 +127,7 @@ def parse_single_html(html: str) -> list | None:
 def scraper(year: int) -> None:
     """Main scraping function: retrieves actor data and saves HTML pages."""
 
-    filename = 'actor scraper/scraped_data.pkl'
+    filename = r"actor scraper/scraped_data.pkl"
     scraped_data = load_requested_data(filename)
 
     if not scraped_data:
@@ -135,11 +137,11 @@ def scraper(year: int) -> None:
     else:
         print(f'\nScraping completed.\n')
 
-def parser() -> None:
+def parser(year: int) -> None:
     """Parse HTML content and store extracted actor data."""
-    filename = "actor scraper/scraped_data.pkl"
+    filename = r"actor scraper/scraped_data.pkl"
     scraped_data = load_requested_data(filename)
-    actor_path = "actor scraper/actor.csv"
+    actor_path = f"actor scraper/actor_{year}.csv"
 
     df = []
     existing_names = set()
@@ -155,6 +157,6 @@ def parser() -> None:
     print(f"Successfully parsed actor data. Total records: {len(actor)}")
 
 if __name__ == "__main__":
-    year = 2025
+    year = 2023
     scraper(year)
-    parser()
+    parser(year)

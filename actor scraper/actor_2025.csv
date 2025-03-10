@@ -7,7 +7,7 @@ rank,name,star_score,movies,average_billing
 6,Jason Momoa,180,2,2.5
 7,Harrison Ford,179,2,5.0
 8,Simu Liu,179,2,10.0
-9,Antonio Banderas,175,3,3.7
+9,Antonio Banderas,177,3,3.7
 10,Ryan Reynolds,169,2,1.5
 11,Ryan Gosling,169,2,1.5
 12,Wang Yibo,167,4,1.8
@@ -35,52 +35,52 @@ rank,name,star_score,movies,average_billing
 34,Cailee Spaeny,138,2,2.0
 35,Ma Li,134,2,2.5
 36,Catherine O'Hara,129,2,4.5
-37,Ariana DeBose,126,2,4.5
-38,Rachel Zegler,125,2,2.0
+37,Rachel Zegler,125,2,2.0
+38,Ariana DeBose,125,2,4.5
 39,Florence Pugh,120,2,4.0
 40,Lucy Alexis Liu,117,2,5.0
 41,"O'Shea Jackson, Jr.",116,2,2.0
 42,Janice Man,115,2,3.5
 43,Sydney Sweeney,114,2,1.5
 44,Ariana Greenblatt,108,2,13.0
-45,Sophie Thatcher,107,2,1.5
+45,Naomi Ackie,106,2,1.5
 46,Halle Bailey,106,2,4.0
-47,Samuel L. Jackson,105,2,6.0
-48,Viola Davis,104,2,7.0
-49,Margot Robbie,103,2,9.5
-50,Chengpeng Dong (董成鹏),101,3,1.0
-51,Will Ferrell,100,1,3.0
-52,Alexandra Shipp,100,1,4.0
-53,Kate McKinnon,100,1,5.0
-54,Ana Kayne,100,1,6.0
-55,Hari Nef,100,1,7.0
-56,Emma Mackey,100,1,8.0
-57,Issa Rae,100,1,10.0
-58,Ritu Arya,100,1,11.0
-59,Michael Cera,100,1,12.0
-60,Nicola Coughlan,100,1,14.0
-61,Sharon Rooney,100,1,15.0
-62,Ncuti Gatwa,100,1,17.0
-63,Scott Evans,100,1,19.0
-64,Emerald Fennell,100,1,20.0
-65,Jamie Demetriou,100,1,21.0
-66,Connor Swindells,100,1,22.0
-67,America Ferrera,100,1,23.0
-68,Hugh Jackman,99,1,2.0
-69,Cillian Murphy,98,1,1.0
-70,Anthony Mackie,98,1,1.0
-71,Danny Ramirez,98,1,2.0
-72,Shira Haas,98,1,3.0
-73,Giancarlo Esposito,98,1,7.0
-74,Tim Blake Nelson,98,1,8.0
-75,Chris Pratt,97,1,1.0
-76,Zoe Saldana,97,1,2.0
-77,Karen Gillan,97,1,4.0
-78,Pom Klementieff,97,1,5.0
-79,Sean Gunn,97,1,8.0
-80,Vin Diesel,96,1,1.0
-81,Cynthia Erivo,96,1,1.0
-82,Naomi Ackie,96,2,1.5
+47,Sophie Thatcher,105,2,1.5
+48,Samuel L. Jackson,105,2,6.0
+49,Viola Davis,104,2,7.0
+50,Margot Robbie,103,2,9.5
+51,Chengpeng Dong (董成鹏),101,3,1.0
+52,Will Ferrell,100,1,3.0
+53,Alexandra Shipp,100,1,4.0
+54,Kate McKinnon,100,1,5.0
+55,Ana Kayne,100,1,6.0
+56,Hari Nef,100,1,7.0
+57,Emma Mackey,100,1,8.0
+58,Issa Rae,100,1,10.0
+59,Ritu Arya,100,1,11.0
+60,Michael Cera,100,1,12.0
+61,Nicola Coughlan,100,1,14.0
+62,Sharon Rooney,100,1,15.0
+63,Ncuti Gatwa,100,1,17.0
+64,Scott Evans,100,1,19.0
+65,Emerald Fennell,100,1,20.0
+66,Jamie Demetriou,100,1,21.0
+67,Connor Swindells,100,1,22.0
+68,America Ferrera,100,1,23.0
+69,Hugh Jackman,99,1,2.0
+70,Cillian Murphy,98,1,1.0
+71,Anthony Mackie,98,1,1.0
+72,Danny Ramirez,98,1,2.0
+73,Shira Haas,98,1,3.0
+74,Giancarlo Esposito,98,1,7.0
+75,Tim Blake Nelson,98,1,8.0
+76,Chris Pratt,97,1,1.0
+77,Zoe Saldana,97,1,2.0
+78,Karen Gillan,97,1,4.0
+79,Pom Klementieff,97,1,5.0
+80,Sean Gunn,97,1,8.0
+81,Vin Diesel,96,1,1.0
+82,Cynthia Erivo,96,1,1.0
 83,Ariana Grande,96,1,2.0
 84,Jordana Brewster,96,1,2.0
 85,Aaron Taylor-Johnson,96,2,2.5
@@ -118,64 +118,64 @@ rank,name,star_score,movies,average_billing
 117,Javier Bardem,92,1,7.0
 118,Melissa McCarthy,92,1,8.0
 119,Tom Cruise,91,1,1.0
-120,Jim Carrey,91,1,5.0
-121,Lee Majdoub,91,1,6.0
-122,Krysten Ritter,91,1,7.0
-123,James Marsden,91,1,8.0
-124,Tika Sumpter,91,1,9.0
-125,Natasha Rothwell,91,1,10.0
-126,Shemar Moore,91,1,11.0
-127,Jia Ling,90,1,1.0
-128,Keke Palmer,90,1,1.0
-129,SZA,90,1,2.0
-130,Wu Jing,90,1,2.0
-131,Liu Xuejian,90,1,3.0
-132,Lay Zhang,89,1,1.0
-133,Mark Wahlberg,89,1,1.0
-134,Tom Hardy,89,1,1.0
-135,Gina Jin,89,1,2.0
-136,Hugh Grant,89,2,4.5
-137,Zhu Yilong,88,1,1.0
-138,Ni Ni,88,1,2.0
-139,Jack Quaid,87,1,1.0
-140,Tina Fey,87,2,5.5
-141,Theo James,86,1,1.0
-142,Paul Mescal,86,1,1.0
-143,Pedro Pascal,86,1,2.0
-144,Evangeline Lilly,86,1,2.0
-145,Jonathan Majors,86,1,3.0
-146,Connie Nielsen,86,1,3.0
-147,Kathryn Newton,86,1,4.0
-148,Fred Hechinger,86,1,6.0
-149,Michelle Pfeiffer,86,1,6.0
-150,Michael Douglas,86,1,7.0
-151,Keanu Reeves,85,1,1.0
-152,Michael Keaton,85,1,1.0
-153,Christopher Abbott,85,1,1.0
-154,Winona Ryder,85,1,2.0
-155,Ian McShane,85,1,4.0
-156,Justin Theroux,85,1,5.0
-157,Shamier Anderson,85,1,5.0
-158,Monica Bellucci,85,1,6.0
-159,Laurence Fishburne,85,1,6.0
-160,Rina Sawayama,85,1,7.0
-161,Hiroyuki Sanada,85,1,8.0
-162,Clancy Brown,85,1,9.0
-163,Lance Reddick,85,1,10.0
-164,Will Smith,84,1,1.0
-165,Martin Lawrence,84,1,2.0
-166,Shah Rukh Khan,83,2,1.0
-167,Freya Allan,83,1,2.0
-168,Dominique Fishback,83,1,2.0
-169,Ke Huy Quan,82,1,1.0
-170,Daisy Edgar-Jones,82,1,2.0
-171,Jason Schwartzman,82,2,2.5
-172,Robert Pattinson,81,1,1.0
-173,Phoebe Waller-Bridge,81,1,2.0
-174,Steven Yuen,81,1,3.0
-175,Toni Collette,81,1,4.0
-176,John Rhys-Davies,81,1,4.0
-177,Mark Ruffalo,81,1,5.0
+120,Robert Pattinson,91,1,1.0
+121,Steven Yuen,91,1,3.0
+122,Toni Collette,91,1,4.0
+123,Mark Ruffalo,91,1,5.0
+124,Jim Carrey,91,1,5.0
+125,Lee Majdoub,91,1,6.0
+126,Krysten Ritter,91,1,7.0
+127,James Marsden,91,1,8.0
+128,Tika Sumpter,91,1,9.0
+129,Natasha Rothwell,91,1,10.0
+130,Shemar Moore,91,1,11.0
+131,Jia Ling,90,1,1.0
+132,Keke Palmer,90,1,1.0
+133,SZA,90,1,2.0
+134,Wu Jing,90,1,2.0
+135,Liu Xuejian,90,1,3.0
+136,Lay Zhang,89,1,1.0
+137,Tom Hardy,89,1,1.0
+138,Gina Jin,89,1,2.0
+139,Hugh Grant,89,2,4.5
+140,Mark Wahlberg,88,1,1.0
+141,Zhu Yilong,88,1,1.0
+142,Ni Ni,88,1,2.0
+143,Theo James,87,1,1.0
+144,Tina Fey,87,2,5.5
+145,Paul Mescal,86,1,1.0
+146,Pedro Pascal,86,1,2.0
+147,Evangeline Lilly,86,1,2.0
+148,Jonathan Majors,86,1,3.0
+149,Connie Nielsen,86,1,3.0
+150,Kathryn Newton,86,1,4.0
+151,Fred Hechinger,86,1,6.0
+152,Michelle Pfeiffer,86,1,6.0
+153,Michael Douglas,86,1,7.0
+154,Keanu Reeves,85,1,1.0
+155,Michael Keaton,85,1,1.0
+156,Jack Quaid,85,1,1.0
+157,Winona Ryder,85,1,2.0
+158,Ian McShane,85,1,4.0
+159,Justin Theroux,85,1,5.0
+160,Shamier Anderson,85,1,5.0
+161,Monica Bellucci,85,1,6.0
+162,Laurence Fishburne,85,1,6.0
+163,Rina Sawayama,85,1,7.0
+164,Hiroyuki Sanada,85,1,8.0
+165,Clancy Brown,85,1,9.0
+166,Lance Reddick,85,1,10.0
+167,Christopher Abbott,84,1,1.0
+168,Will Smith,84,1,1.0
+169,Martin Lawrence,84,1,2.0
+170,Shah Rukh Khan,83,2,1.0
+171,Freya Allan,83,1,2.0
+172,Dominique Fishback,83,1,2.0
+173,Daisy Edgar-Jones,82,1,2.0
+174,Jason Schwartzman,82,2,2.5
+175,Ke Huy Quan,81,1,1.0
+176,Phoebe Waller-Bridge,81,1,2.0
+177,John Rhys-Davies,81,1,4.0
 178,Toby Jones,81,1,5.0
 179,Boyd Holbrook,81,1,6.0
 180,Ethann Isidore,81,1,7.0
@@ -188,10 +188,10 @@ rank,name,star_score,movies,average_billing
 187,Peter Dinklage,79,1,5.0
 188,Josh Andrés Rivera,79,1,6.0
 189,Wang Baoqiang,78,1,1.0
-190,Song Hye-kyo,77,1,1.0
-191,Jeon Yeo-Bin (전여빈),77,1,2.0
-192,Lupita Nyong'o,76,1,1.0
-193,Matthew Lillard,76,1,1.0
+190,Lupita Nyong'o,76,1,1.0
+191,Matthew Lillard,76,1,1.0
+192,Song Hye-kyo,76,1,1.0
+193,Jeon Yeo-Bin (전여빈),76,1,2.0
 194,Josh Hutcherson,76,1,2.0
 195,Michael B. Jordan,74,1,1.0
 196,Lady Gaga,74,1,2.0
@@ -216,13 +216,13 @@ rank,name,star_score,movies,average_billing
 215,Nicholas Hoult,68,1,2.0
 216,Lily-Rose Depp,68,1,3.0
 217,Emma Corrin,68,1,5.0
-218,Anya Taylor-Joy,66,1,1.0
-219,Chris Hemsworth,66,1,2.0
-220,Avantika,66,2,4.0
-221,Hugh Bonneville,64,1,1.0
-222,Emily Mortimer,64,1,2.0
-223,Julie Walters,64,1,3.0
-224,Olivia Colman,64,1,4.0
+218,Hugh Bonneville,66,1,1.0
+219,Emily Mortimer,66,1,2.0
+220,Julie Walters,66,1,3.0
+221,Avantika,66,2,4.0
+222,Olivia Colman,66,1,4.0
+223,Anya Taylor-Joy,65,1,1.0
+224,Chris Hemsworth,65,1,2.0
 225,Chris Pine,63,1,1.0
 226,Rege-Jean Page,63,1,3.0
 227,Justice Smith,63,1,4.0
@@ -419,21 +419,21 @@ rank,name,star_score,movies,average_billing
 418,Fantasia Barrino,14,1,8.0
 419,Zhang Songwen,13,1,3.0
 420,Qi Xi,13,1,4.0
-421,Sunny Sun,13,1,5.0
-422,Ni Dahong,11,1,1.0
-423,DeWanda Wise,11,1,1.0
-424,Kara Wai Ying-hung,11,1,2.0
-425,Pyper Braun,11,1,2.0
+421,Adrien Brody,13,2,4.5
+422,Sunny Sun,13,1,5.0
+423,Mikey Madison,11,1,1.0
+424,Ni Dahong,11,1,1.0
+425,Kara Wai Ying-hung,11,1,2.0
 426,Tony Leung Ka Fai,11,1,3.0
 427,Cecilia Yip,11,1,4.0
-428,Adrien Brody,11,2,4.5
-429,Milos Bikovic,10,1,1.0
-430,Aglaya Tarasova,10,1,2.0
-431,Alisha Weir,9,1,1.0
-432,Salma Hayek,9,1,2.0
-433,Adam Driver,8,1,1.0
-434,Jackie Chan,7,1,1.0
-435,Mikey Madison,6,1,1.0
+428,DeWanda Wise,9,1,1.0
+429,Salma Hayek,9,1,2.0
+430,Pyper Braun,9,1,2.0
+431,Adam Driver,8,1,1.0
+432,Milos Bikovic,8,1,1.0
+433,Aglaya Tarasova,8,1,2.0
+434,Alisha Weir,7,1,1.0
+435,Jackie Chan,6,1,1.0
 436,Jonathan Groff,5,1,2.0
 437,Ben Aldridge,5,1,3.0
 438,Nikki Amuka-Bird,5,1,4.0

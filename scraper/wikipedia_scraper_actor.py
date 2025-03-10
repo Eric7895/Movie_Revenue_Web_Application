@@ -30,12 +30,14 @@ def get_stopping_point() -> int:
 def save_stopping_point(index: int) -> None:
     """Save the current stopping point to allow resumption after failure."""
     filename = "wikipedia scraper/stopping_point.txt"
+    os.makedirs(os.path.dirname(filename), exist_ok=True)  # Ensure the directory exists
     with open(filename, "w") as file:
         file.write(str(index))
 
 
 def save_requested_data(data: list, filename: str) -> None:
     """Save scraped HTML content using pickle."""
+    os.makedirs(os.path.dirname(filename), exist_ok=True)  # Ensure the directory exists
     with open(filename, 'wb') as file:
         pickle.dump(data, file)
     print(f"Data saved to {filename}.")
@@ -102,12 +104,14 @@ def request_all_movies(movies: pd.DataFrame, start_index: int = 0) -> list:
                     result.append(response.text)
                     print(f"Index {i}: Found movie page - {url}")
                     save_stopping_point(i)  # Save progress
+                    save_requested_data(result, 'wikipedia scraper/scraped_data.pkl')  # Save data
                     break  # Stop trying once a valid page is found
                 else:
                     print(f"Index {i}: Movie not found - {url}")
             except requests.ConnectionError:
                 print(f"Index {i}: Connection error. Stopping...")
                 save_stopping_point(i)
+                save_requested_data(result, 'wikipedia scraper/scraped_data.pkl')  # Save data
                 return result  # Stop and save progress
 
         time.sleep(1)  # Delay to avoid rate limiting
@@ -155,26 +159,19 @@ def scraper() -> None:
     target_movies, _ = get_movie_list()
     target_movies['primaryTitle'] = target_movies['primaryTitle'].map(format_movie_name)
 
-    filename = 'wikipedia scraper/scraped_data.pkl'
-    scraped_data = load_requested_data(filename)
+    # Start index from stopping point and load the initial data
     start_index = get_stopping_point()
+    print(f"Starting from index {start_index}...")
 
-    if not scraped_data:
-        scraped_data = request_all_movies(target_movies, start_index)
-    else:
-        print(f"Resuming scraping from index {start_index}...")
-        new_data = request_all_movies(target_movies, start_index)
-        scraped_data.extend(new_data)
+    request_all_movies(target_movies, start_index)  # This will save data incrementally during scraping
 
-    save_requested_data(scraped_data, filename)
     print("\nScraping completed.\n")
-
 
 def parser() -> None:
     """Parse HTML content and store extracted movie-actor data."""
-    filename = 'wikipedia scraper/scraped_data.pkl'
+    filename = r'wikipedia scraper/scraped_data.pkl'
     scraped_data = load_requested_data(filename)
-    temp_actor_path = "wikipedia scraper/temp_actor.csv"
+    temp_actor_path = r"wikipedia scraper/temp_actor.csv"
 
     if os.path.exists(temp_actor_path):
         df_existing = pd.read_csv(temp_actor_path)
@@ -227,6 +224,6 @@ def dataset_summary() -> None:
 
 if __name__ == '__main__':
     #scraper()
-    #parser()
-    #clean_dataset()
+    parser()
+    clean_dataset()
     dataset_summary()
