@@ -10,7 +10,10 @@ from bs4 import BeautifulSoup
 # ==============================
 
 def save_requested_data(data: list, filename: str) -> None:
-    """Save scraped HTML content using pickle."""
+    '''
+    Save scraped HTML content using pickle.
+    '''
+    
     os.makedirs(os.path.dirname(filename), exist_ok=True)  # Ensure the directory exists
     
     with open(filename, 'wb') as file:
@@ -19,7 +22,9 @@ def save_requested_data(data: list, filename: str) -> None:
 
 
 def load_requested_data(filename: str) -> list:
-    """Load previously saved HTML content."""
+    '''
+    Load previously saved HTML content.
+    '''
     if os.path.exists(filename):
         with open(filename, 'rb') as file:
             data = pickle.load(file)
@@ -33,7 +38,9 @@ def load_requested_data(filename: str) -> list:
 # ==============================
 
 def request_all_table(year: int = 2025) -> list:
-    """Fetch Actor billboard"""
+    '''
+    Fetch Actor billboard
+    '''
     q = queue.Queue()
 
     result = []
@@ -86,7 +93,9 @@ def request_all_table(year: int = 2025) -> list:
 # ==============================
 
 def parse_single_html(html: str) -> list | None:
-    """Extract actor information from single html page"""
+    '''
+    Extract actor information from single html page
+    '''
     soup = BeautifulSoup(html, "html.parser")
     tables = soup.find_all("table")
     data = tables[-1].find_all("tr")
@@ -125,7 +134,9 @@ def parse_single_html(html: str) -> list | None:
 # ==============================
 
 def scraper(year: int) -> None:
-    """Main scraping function: retrieves actor data and saves HTML pages."""
+    '''
+    Main scraping function: retrieves actor data and saves HTML pages.
+    '''
 
     filename = r"actor scraper/scraped_data.pkl"
     scraped_data = load_requested_data(filename)
@@ -138,7 +149,9 @@ def scraper(year: int) -> None:
         print(f'\nScraping completed.\n')
 
 def parser(year: int) -> None:
-    """Parse HTML content and store extracted actor data."""
+    '''
+    Parse HTML content and store extracted actor data.
+    '''
     filename = r"actor scraper/scraped_data.pkl"
     scraped_data = load_requested_data(filename)
     actor_path = f"actor scraper/actor_{year}.csv"

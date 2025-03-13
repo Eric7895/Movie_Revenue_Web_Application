@@ -16,7 +16,9 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 # ==============================
 
 def get_stopping_point() -> int:
-    """Retrieve the last stopping index to resume scraping after failure."""
+    '''
+    Retrieve the last stopping index to resume scraping after failure.
+    '''
     filename = "wikipedia scraper/stopping_point.txt"
     if os.path.exists(filename):
         with open(filename, "r") as file:
@@ -28,7 +30,9 @@ def get_stopping_point() -> int:
 
 
 def save_stopping_point(index: int) -> None:
-    """Save the current stopping point to allow resumption after failure."""
+    '''
+    Save the current stopping point to allow resumption after failure.
+    '''
     filename = "wikipedia scraper/stopping_point.txt"
     os.makedirs(os.path.dirname(filename), exist_ok=True)  # Ensure the directory exists
     with open(filename, "w") as file:
@@ -36,7 +40,9 @@ def save_stopping_point(index: int) -> None:
 
 
 def save_requested_data(data: list, filename: str) -> None:
-    """Save scraped HTML content using pickle."""
+    '''
+    Save scraped HTML content using pickle.
+    '''
     os.makedirs(os.path.dirname(filename), exist_ok=True)  # Ensure the directory exists
     with open(filename, 'wb') as file:
         pickle.dump(data, file)
@@ -44,7 +50,9 @@ def save_requested_data(data: list, filename: str) -> None:
 
 
 def load_requested_data(filename: str) -> list:
-    """Load previously saved HTML content."""
+    '''
+    Load previously saved HTML content.
+    '''
     if os.path.exists(filename):
         with open(filename, 'rb') as file:
             data = pickle.load(file)
@@ -55,7 +63,9 @@ def load_requested_data(filename: str) -> list:
 
 
 def get_movie_list() -> tuple[pd.DataFrame, set]:
-    """Retrieve movie names and years from balanced.csv, filtering out already scraped movies."""
+    '''
+    Retrieve movie names and years from balanced.csv, filtering out already scraped movies.
+    '''
     path_movies = os.path.join(DATA_DIR, "balanced.csv")
     df_movies = pd.read_csv(path_movies)
 
@@ -74,7 +84,9 @@ def get_movie_list() -> tuple[pd.DataFrame, set]:
 
 
 def format_movie_name(title: str) -> str:
-    """Format movie title by replacing spaces with underscores and encoding special characters."""
+    '''
+    Format movie title by replacing spaces with underscores and encoding special characters.
+    '''
     return urllib.parse.quote(title.replace(" ", "_"), safe="_")
 
 
@@ -83,7 +95,9 @@ def format_movie_name(title: str) -> str:
 # ==============================
 
 def request_all_movies(movies: pd.DataFrame, start_index: int = 0) -> list:
-    """Fetch Wikipedia pages for each movie, trying three URL variations."""
+    '''
+    Fetch Wikipedia pages for each movie, trying three URL variations.
+    '''
     result = []
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
@@ -124,7 +138,9 @@ def request_all_movies(movies: pd.DataFrame, start_index: int = 0) -> list:
 # ==============================
 
 def parse_movie_html(html: str) -> dict | None:
-    """Extract movie name and cast from Wikipedia infobox."""
+    '''
+    Extract movie name and cast from Wikipedia infobox.
+    '''
     soup = BeautifulSoup(html, "html.parser")
     tables = soup.find_all("table", class_="infobox vevent")
 
@@ -155,7 +171,9 @@ def parse_movie_html(html: str) -> dict | None:
 # ==============================
 
 def scraper() -> None:
-    """Main scraping function: retrieves movie data and saves HTML pages."""
+    '''
+    Main scraping function: retrieves movie data and saves HTML pages.
+    '''
     target_movies, _ = get_movie_list()
     target_movies['primaryTitle'] = target_movies['primaryTitle'].map(format_movie_name)
 
@@ -168,7 +186,9 @@ def scraper() -> None:
     print("\nScraping completed.\n")
 
 def parser() -> None:
-    """Parse HTML content and store extracted movie-actor data."""
+    '''
+    Parse HTML content and store extracted movie-actor data.
+    '''
     filename = r'wikipedia scraper/scraped_data.pkl'
     scraped_data = load_requested_data(filename)
     temp_actor_path = r"wikipedia scraper/temp_actor.csv"
@@ -203,7 +223,9 @@ def parser() -> None:
 # ==============================
 
 def clean_dataset() -> None:
-    """Merge scraped actor data with balanced dataset and generate the final dataset."""
+    '''
+    Merge scraped actor data with balanced dataset and generate the final dataset.
+    '''
     df_movies = pd.read_csv(os.path.join(DATA_DIR, "balanced.csv"))
     df_actors = pd.read_csv("wikipedia scraper/temp_actor.csv")
 
@@ -216,7 +238,9 @@ def clean_dataset() -> None:
 
 
 def dataset_summary() -> None:
-    """Print summary statistics of the final dataset."""
+    '''
+    Print summary statistics of the final dataset.
+    '''
     df = pd.read_csv(os.path.join(DATA_DIR, "final_dataset.csv"))
     print(df.info())
     print(df.describe())
