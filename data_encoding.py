@@ -32,23 +32,20 @@ def encoding_people(df: pd.DataFrame, name_list: list, column_name: str, score_n
     output_df = []
     for i in range(len(df)):
         movie_title = df['primaryTitle'].iloc[i]
-        # For actor information, check if the value is missing or empty
+        
         if if_actor:
-            # Here we assume actor info is stored as a list
             actor_info = df[column_name].iloc[i]
-            if pd.isnull(actor_info) or (isinstance(actor_info, list) and len(actor_info) == 0):
+            if pd.isnull(actor_info) or actor_info == '':
                 output_df.append({'name': movie_title, score_name: 0, 'is_documentary': 1})
                 continue
             else:
                 is_documentary_flag = 0
-                names = actor_info
         else:
-            # For director/writer, assume the info is a comma-separated string
             if pd.isnull(df[column_name].iloc[i]):
                 output_df.append({'name': movie_title, score_name: np.nan})
                 continue
-            names = df[column_name].iloc[i].split(',')
         
+        names = df[column_name].iloc[i].split(',')
         score = 0
         for name in names:
             if name_list.count(name) > 0:
@@ -302,11 +299,12 @@ def main(verbose=False, year: int = 2025):
     # We merge the language columns. Assume language columns are those starting with 'lang_'.
     language_cols = [col for col in language.columns if col.startswith('lang_')]
     movie_stg1 = movie_stg1.merge(language[['primaryTitle'] + language_cols].rename(columns={'primaryTitle':'name'}), on='name', how='left')
+    movie_stg1['has_trailer'] = movie_stg1['trailer_views'].notna().astype(float)
 
     if verbose:
         print("Phase 1 completed: Aggregated all encoded features into movie_stg1")
 
-    # Phase 2: CPI adjustment (movie_stg2)
+    # Phase 2: CPI adjustment (movie_stg2)p
     movie_stg2 = CPI_adjustment(movie_stg1.copy())
     if verbose:
         print("Phase 2 completed: Applied CPI adjustment to create movie_stg2")

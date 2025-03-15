@@ -169,7 +169,9 @@ def parser(year: int) -> None:
     actor.to_csv(actor_path, index=False)
     print(f"Successfully parsed actor data. Total records: {len(actor)}")
 
-if __name__ == "__main__":
-    year = 2020
+def actor_scraper(year):
     scraper(year)
     parser(year)
+
+if __name__ == "__main__":
+    actor_scraper(year=2025)

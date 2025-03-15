@@ -61,24 +61,45 @@ def unmasked_director_writer(df: pd.DataFrame, name_dict: dict) -> pd.DataFrame:
 
     return df_copy
 
+import pandas as pd
+
 def get_actor_info(df: pd.DataFrame, name_dict: dict, title_dict: dict) -> pd.DataFrame:
     """
     Retrieve actor information for each movie using principals.tsv.
     """
     df_copy = df.copy(deep=True).reset_index(drop=True)
     actors_df = df_copy[df_copy['category'].isin(['actor', 'actress'])]
+
     actor_dict = {}
+
     for _, row in actors_df.iterrows():
         movie_title = row['tconst']
         actor_id = row['nconst']
+
         # Map actor and title IDs to unmasked names
         unmasked_actor = name_dict.get(actor_id, actor_id)
         unmasked_title = title_dict.get(movie_title, movie_title)
+
+        if isinstance(unmasked_actor, float):  # Skip NaN values
+            continue
+
+        # Add actor to the set (to prevent duplicates)
         if unmasked_title not in actor_dict:
-            actor_dict[unmasked_title] = [unmasked_actor]
-        else:
-            actor_dict[unmasked_title].append(unmasked_actor)
-    return pd.DataFrame(actor_dict.items(), columns=['title', 'actors'])
+            actor_dict[unmasked_title] = set()
+        actor_dict[unmasked_title].add(unmasked_actor)
+
+    # Convert sets to comma-separated strings and truncate if necessary
+    processed_data = []
+    for title, actor_set in actor_dict.items():
+        actor_string = ','.join(actor_set)
+
+        if len(actor_string) > 5000: # Truncate
+            actor_string = actor_string[:5000]
+
+        processed_data.append({'title': title, 'actors': actor_string})
+
+    return pd.DataFrame(processed_data)
+
 
 def download_and_extract_imdb_data(url: str, dest_folder: str) -> None:
     """
