@@ -1,10 +1,11 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, UploadFile, File
 from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
 from datetime import datetime
 from models import Movies, Base
 from db import get_engine
 from pydantic import BaseModel
+import json
 
 app = FastAPI(
     title = 'Movie API'
@@ -206,5 +207,181 @@ def query_movies_by_parameters(
         'Matching Movies': movies
     }
 
+@app.post("/movies/upload/")
+async def upload_movies(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    """
+    Upload a JSON file of movies and add them to the database.
+    """
+
+    # Read the JSON data from the file
+    try:
+        contents = await file.read()
+        data = json.loads(contents.decode("utf-8")) 
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON file")
     
+    if not isinstance(data, list):
+        raise HTTPException(status_code=400, detail="JSON data must be an array")
+    
+    added_movies = []
+    skipped_movies = []
+
+    for movie in data:
+        try:
+            required_fields = [
+                "primaryTitle", "titleType", "genres", "directors", "writers", "release_date",
+                "averageRating", "numVotes", "original_language", "production_companies",
+                "budget", "runtime"
+            ]
+        
+            for field in required_fields:
+                if field not in movie:
+                    skipped_movies.append({"movie": movie, "reason": f"Missing required field: {field}"})
+                    continue 
+        
+            # Extract and validate fields
+            title = movie["primaryTitle"]
+            release_date_str = movie["release_date"]
+
+            # Convert date field 
+            try:
+                release_date = datetime.strptime(release_date_str, "%Y-%m-%d").date()
+            except ValueError:
+                skipped_movies.append({"movie": movie, "reason": "Invalid date format (YYYY-MM-DD required)"})
+                continue 
+
+            # Check for duplicate
+            if db.query(Movies).filter(Movies.primaryTitle == title, Movies.release_date == release_date).first():
+                skipped_movies.append({"movie": movie, "reason": "Duplicate movie"})
+                continue  
+
+            # Create new movie object
+            new_movie = Movies(
+                primaryTitle=movie["primaryTitle"],  # Already checked
+                titleType=movie["titleType"],
+                genres=movie["genres"],
+                directors=movie["directors"],
+                writers=movie["writers"],
+                averageRating=movie["averageRating"],  # No default; should be in JSON
+                numVotes=movie["numVotes"],
+                original_language=movie["original_language"],
+                production_companies=movie["production_companies"],
+                release_date=release_date,  # Already converted
+                budget=movie["budget"],
+               revenue=movie.get("revenue"),  # Optional
+                runtime=movie["runtime"],
+                keywords=movie.get("keywords"),  # Nullable; should be None if missing
+               trailer_views=movie.get("trailer_views"),  # Nullable
+               trailer_likes=movie.get("trailer_likes"),  # Nullable
+            )
+
+
+            db.add(new_movie)
+            added_movies.append(title)
+        except Exception as e:
+            skipped_movies.append({"movie": movie, "reason": str(e)})
+            continue 
+    
+    db.commit()  # Commit once at the end
+
+    return {
+        "message": "Movies upload complete",
+        "added_movies": added_movies,
+        "skipped_movies": skipped_movies
+    }
+
+@app.put("/movies/{title}/")
+def update_movie(title: str,
+                 titleType: str | None = None,
+                 release_date: str | None = None,
+                 genres: str | None = None,
+                 direcors: str | None = None,
+                 writers: str | None = None,
+                 actors: str | None = None,
+                 keywords: str | None = None,
+                 production_companies: str | None = None,
+                 original_language: str | None = None,
+                 averageRating: float | None = None,
+                 numVotes: float | None = None,
+                 budget: float | None = None,
+                 revenue: float | None = None,
+                 runtime: float | None = None,
+                 trailer_views: float | None = None,
+                 trailer_likes: float | None = None,
+                 db: Session = Depends(get_db)
+                 ):
+    """
+    Update a movie by title and parameters
+    """
+    movie = db.query(Movies).filter(Movies.primaryTitle == title).first()
+
+    if not movie:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    
+    if titleType is not None:
+        movie.titleType = titleType
+    
+    if release_date is not None:
+        movie.release_date = release_date
+
+    if genres is not None:
+        movie.genres = genres
+
+    if direcors is not None:
+        movie.directors = direcors
+
+    if writers is not None:
+        movie.writers = writers
+
+    if actors is not None:
+        movie.actors = actors
+
+    if keywords is not None:
+        movie.keywords = keywords
+
+    if production_companies is not None:
+        movie.production_companies = production_companies
+
+    if original_language is not None:
+        movie.original_language = original_language
+
+    if averageRating is not None:
+        movie.averageRating = averageRating
+
+    if numVotes is not None:
+        movie.numVotes = numVotes
+
+    if budget is not None:
+        movie.budget = budget
+
+    if revenue is not None:
+        movie.revenue = revenue
+
+    if runtime is not None:
+        movie.runtime = runtime
+
+    if trailer_views is not None:
+        movie.trailer_views = trailer_views
+
+    if trailer_likes is not None:
+        movie.trailer_likes = trailer_likes
+
+    db.commit()
+
+    return {"message": "Movie {movie.primaryTitle} updated successfully",
+            "Updated Movie": {
+                'Title': movie.primaryTitle,
+                'Release_date': movie.release_date,
+                'genres': movie.genres,
+                'averageRating': movie.averageRating,   
+                'numVotes': movie.numVotes,
+                'original_language': movie.original_language,
+                'production_companies': movie.production_companies,
+                'budget': movie.budget,
+                'revenue': movie.revenue,
+                'runtime': movie.runtime,
+                'keywords': movie.keywords,
+                'trailer_views': movie.trailer_views,
+                'trailer_likes': movie.trailer_likes    
+            }}
 # Run the app using "uvicorn movie_api:app --reload"
