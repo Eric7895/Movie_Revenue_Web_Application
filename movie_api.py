@@ -234,10 +234,11 @@ async def upload_movies(file: UploadFile = File(...), db: Session = Depends(get_
                 "budget", "runtime"
             ]
         
-            for field in required_fields:
-                if field not in movie:
-                    skipped_movies.append({"movie": movie, "reason": f"Missing required field: {field}"})
-                    continue 
+            # Check all required fields at once
+            missing_fields = [field for field in required_fields if field not in movie]
+            if missing_fields:
+                skipped_movies.append({"movie": movie, "reason": f"Missing fields: {', '.join(missing_fields)}"})
+                continue  # Skip this movie entirely
         
             # Extract and validate fields
             title = movie["primaryTitle"]
@@ -384,4 +385,6 @@ def update_movie(title: str,
                 'trailer_views': movie.trailer_views,
                 'trailer_likes': movie.trailer_likes    
             }}
+
+# Fixed vs code path error using "set PATH=%CONDA_PREFIX%\Scripts;%PATH%"
 # Run the app using "uvicorn movie_api:app --reload"
