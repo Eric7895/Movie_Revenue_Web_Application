@@ -11,9 +11,9 @@ End Project: To deliver a web application supporting CRUD operation from data so
 
 ## Research Question:
 - How do we hold sequel movie revenue accountable?
-- How can we control the inflation rate if we want to use early movies? (Using the Consumer Price Index could be a solution.)
+- How can we control the inflation rate if we want to use early movies? (Using the Consumer Price Index could be a solution.) ✔️
 - How do we standardize movie revenue? (The revenue variable we have is probably gross revenue since the movie's release, we can try to classified movie revenue into categories to standardized it to certain extent)
-- Using information from five years earlier might not be reliable. (We can probably solve this issue by including more covariates)
+- Using information from five years earlier might not be reliable. (We can probably solve this issue by including more covariates) ✔️
 ---
 ## Data Source:
 - https://www.imdb.com/list/ls026411399 (A director billboard)
@@ -23,6 +23,15 @@ End Project: To deliver a web application supporting CRUD operation from data so
 - https://github.com/vikranth3140/movie-revenue-prediction
 - https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies
 - https://github.com/arnab-api/movie-analysis
+---
+## File Description:
+- populate_data.py - Create the movie_data.csv file, by requesting downloadable IMDB official data, and integrated it with a pre-existing movie dataset for more featuring.
+- data_encoding.py - Encoded qualitative variables of the movie_data.csv file and outputs the encoded file as a csv file.
+- db.py - Set up the database connection (mysql in particular)
+- models.py - Set up the table class
+- populate_database - Imports movie_data.csv into the designated mysql database.
+  - Requires mysql server, a database schema named 'movie_API', and your mysql key and password
+- movie_api.py - RESTApi supporting Create, Read, Update, and Delete capability. 
 ---
 ## Progress Check
 
