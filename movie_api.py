@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session, sessionmaker
 from datetime import datetime
 from models import Movies, Base
 from db import get_engine
-from pydantic import BaseModel
 import json
 
 app = FastAPI(
@@ -210,84 +209,74 @@ def query_movies_by_parameters(
 @app.post("/movies/upload/")
 async def upload_movies(file: UploadFile = File(...), db: Session = Depends(get_db)):
     """
-    Upload a JSON file of movies and add them to the database.
+    Upload a JSON file of movies and add them to the database efficiently.
     """
-
-    # Read the JSON data from the file
     try:
+        # Read the file content and parse JSON
         contents = await file.read()
-        data = json.loads(contents.decode("utf-8")) 
+        data = json.loads(contents.decode("utf-8"))
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Invalid JSON file")
-    
+
     if not isinstance(data, list):
         raise HTTPException(status_code=400, detail="JSON data must be an array")
-    
-    added_movies = []
+
+    required_fields = {
+        "primaryTitle", "titleType", "genres", "directors", "writers",
+        "release_date", "averageRating", "numVotes", "original_language",
+        "production_companies", "budget", "runtime"
+    }
+
+    movies_to_add = []  # Store movies for batch insert
     skipped_movies = []
 
     for movie in data:
+        missing_fields = required_fields - movie.keys()
+        if missing_fields:
+            skipped_movies.append({"movie": movie, "reason": f"Missing fields: {', '.join(missing_fields)}"})
+            continue  # Skip this movie
+
+        # Convert date field
         try:
-            required_fields = [
-                "primaryTitle", "titleType", "genres", "directors", "writers", "release_date",
-                "averageRating", "numVotes", "original_language", "production_companies",
-                "budget", "runtime"
-            ]
-        
-            # Check all required fields at once
-            missing_fields = [field for field in required_fields if field not in movie]
-            if missing_fields:
-                skipped_movies.append({"movie": movie, "reason": f"Missing fields: {', '.join(missing_fields)}"})
-                continue  # Skip this movie entirely
-        
-            # Extract and validate fields
-            title = movie["primaryTitle"]
-            release_date_str = movie["release_date"]
-
-            # Convert date field 
-            try:
-                release_date = datetime.strptime(release_date_str, "%Y-%m-%d").date()
-            except ValueError:
-                skipped_movies.append({"movie": movie, "reason": "Invalid date format (YYYY-MM-DD required)"})
-                continue 
-
-            # Check for duplicate
-            if db.query(Movies).filter(Movies.primaryTitle == title, Movies.release_date == release_date).first():
-                skipped_movies.append({"movie": movie, "reason": "Duplicate movie"})
-                continue  
-
-            # Create new movie object
-            new_movie = Movies(
-                primaryTitle=movie["primaryTitle"],  # Already checked
-                titleType=movie["titleType"],
-                genres=movie["genres"],
-                directors=movie["directors"],
-                writers=movie["writers"],
-                averageRating=movie["averageRating"],  # No default; should be in JSON
-                numVotes=movie["numVotes"],
-                original_language=movie["original_language"],
-                production_companies=movie["production_companies"],
-                release_date=release_date,  # Already converted
-                budget=movie["budget"],
-               revenue=movie.get("revenue"),  # Optional
-                runtime=movie["runtime"],
-                keywords=movie.get("keywords"),  # Nullable; should be None if missing
-               trailer_views=movie.get("trailer_views"),  # Nullable
-               trailer_likes=movie.get("trailer_likes"),  # Nullable
-            )
-
-
-            db.add(new_movie)
-            added_movies.append(title)
-        except Exception as e:
-            skipped_movies.append({"movie": movie, "reason": str(e)})
+            release_date = datetime.strptime(movie["release_date"], "%Y-%m-%d").date()
+        except ValueError:
+            skipped_movies.append({"movie": movie, "reason": "Invalid date format (YYYY-MM-DD required)"})
             continue 
-    
-    db.commit()  # Commit once at the end
+
+        # Check for duplicates in one query (faster than checking each movie separately)
+        if db.query(Movies).filter(Movies.primaryTitle == movie["primaryTitle"], Movies.release_date == release_date).first():
+            skipped_movies.append({"movie": movie, "reason": "Duplicate movie"})
+            continue  
+
+        # Create new movie object
+        new_movie = Movies(
+            primaryTitle=movie["primaryTitle"],
+            titleType=movie["titleType"],
+            genres=movie["genres"],
+            directors=movie["directors"],
+            writers=movie["writers"],
+            averageRating=movie["averageRating"],
+            numVotes=movie["numVotes"],
+            original_language=movie["original_language"],
+            production_companies=movie["production_companies"],
+            release_date=release_date,
+            budget=movie["budget"],
+            revenue=movie.get("revenue"),
+            runtime=movie["runtime"],
+            keywords=movie.get("keywords"),
+            trailer_views=movie.get("trailer_views"),
+            trailer_likes=movie.get("trailer_likes"),
+        )
+        
+        movies_to_add.append(new_movie)  # Add to batch list
+
+    if movies_to_add:
+        db.bulk_save_objects(movies_to_add)  # **Bulk insert for faster performance**
+        db.commit()  # Commit once at the end
 
     return {
         "message": "Movies upload complete",
-        "added_movies": added_movies,
+        "added_movies": [movie.primaryTitle for movie in movies_to_add],
         "skipped_movies": skipped_movies
     }
 
