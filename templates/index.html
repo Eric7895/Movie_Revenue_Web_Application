@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie API Portal</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 Movie Revenue Web Application</h1>
+            <nav>
+                <a href="/" class="nav-link">Home</a>
+                <a href="/dashboard/" class="nav-link">Dashboard</a>
+                <a href="/notebook/" class="nav-link">Notebook</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="api-info">
+                <h2>Available Endpoints</h2>
+                <div class="endpoint-card">
+                    <h3>GET movies_basic/</h3>
+                    <p>Retrieve basic movie information</p>
+                </div>
+                <div class="endpoint-card">
+                    <h3>GET movies_search/{title}</h3>
+                    <p>Search movies by title</p>
+                </div>
+                <div class="endpoint-card">
+                    <h3>GET movies_actors/</h3>
+                    <p>Retrieve actors list with each movie</p>
+                </div>
+                <div class="endpoint-card">
+                    <h3>GET movies_writers/</h3>
+                    <p>Retrieve writers list with each movie</p>
+                </div>
+                <div class="endpoint-card">
+                    <h3>GET movies_directors/</h3>
+                    <p>Retrieve directors list with each movie</p>
+                </div>
+            </section>
+
+            <section class="quick-search">
+                <h2>Quick Search By Movie Title</h2>
+                <form id="searchForm">
+                    <input type="text" placeholder="Enter movie title..." class="search-input" name="title">
+                    <input type="text" placeholder="Enter release date in YYYY-MM-DD format..." class="search-input" name="release_date">
+                    <input type="text" placeholder="Enter genre..." class="search-input" name="genres">
+                    <!-- Add more filters if needed -->
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
+                <div id="results" class="results-container"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

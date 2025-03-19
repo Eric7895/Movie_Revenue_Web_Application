@@ -1,14 +1,19 @@
-from fastapi import FastAPI, HTTPException, Depends, UploadFile, File
-from sqlalchemy import func
+from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session, sessionmaker
 from datetime import datetime
 from models import Movies, Base
 from db import get_engine
-import json
+import pandas as pd
+import uvicorn
 
 app = FastAPI(
     title = 'Movie API'
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 # Initialize the database
 engine = get_engine()
@@ -26,20 +31,9 @@ def get_db():
 
 # Routes 
 
-@app.get("/")
-def main():
-    '''
-    Print an index page
-    '''
-    main = {
-        'Welcoming_message': 'Finally working',
-        '/movies_basic/': 'Query all movies with basic informations',
-        '/movies_actors/': 'Query all movies with actors',
-        '/movies_directors/': 'Query all movies with directors',
-        '/movies_writers/': 'Query all movies with writers',
-        '/movies_search/{title}': 'Query all movies by a title string using wild card',
-    }
-    return {"message": main}
+@app.get("/", include_in_schema=False)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/movies_basic/")
 def get_movies_basic(db: Session = Depends(get_db)):
@@ -84,10 +78,10 @@ def get_movies_search(title: str, db: Session = Depends(get_db)):
     Query all movies by a title string using wild card
     '''
     movies = db.query(Movies).filter(Movies.primaryTitle.contains(title)).all()
-    return [{"Title": movie.primaryTitle, "Release_date": movie.release_date, "genres": movie.genres, 
-             "Rating": movie.averageRating, "Votes": movie.numVotes, "original_language": movie.original_language, 
-             "Production_companies": movie.production_companies, 
-             "Budget": movie.budget, "Revenue": movie.revenue, "Runtime": movie.runtime, "keywords": movie.keywords,
+    return [{"Title": movie.primaryTitle, "Release_date": movie.release_date, "Genres": movie.genres, 
+             "Rating": movie.averageRating, "Votes": movie.numVotes, "Original_Language": movie.original_language, 
+             "Production_Companies": movie.production_companies, 
+             "Budget": movie.budget, "Revenue": movie.revenue, "Runtime": movie.runtime, "Keywords": movie.keywords,
              "Trailer_Views": movie.trailer_views, "Trailer_Likes": movie.trailer_likes} 
             for movie in movies]
 
@@ -207,77 +201,49 @@ def query_movies_by_parameters(
     }
 
 @app.post("/movies/upload/")
-async def upload_movies(file: UploadFile = File(...), db: Session = Depends(get_db)):
+def upload_movies(file: UploadFile = File(...), db: Session = Depends(get_db)):
     """
-    Upload a JSON file of movies and add them to the database efficiently.
+    Upload movies from a CSV file
     """
     try:
-        # Read the file content and parse JSON
-        contents = await file.read()
-        data = json.loads(contents.decode("utf-8"))
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="Invalid JSON file")
-
-    if not isinstance(data, list):
-        raise HTTPException(status_code=400, detail="JSON data must be an array")
-
-    required_fields = {
-        "primaryTitle", "titleType", "genres", "directors", "writers",
-        "release_date", "averageRating", "numVotes", "original_language",
-        "production_companies", "budget", "runtime"
-    }
-
-    movies_to_add = []  # Store movies for batch insert
-    skipped_movies = []
-
-    for movie in data:
-        missing_fields = required_fields - movie.keys()
-        if missing_fields:
-            skipped_movies.append({"movie": movie, "reason": f"Missing fields: {', '.join(missing_fields)}"})
-            continue  # Skip this movie
-
-        # Convert date field
+        df = pd.read_csv(file.file)
+    except FileNotFoundError:
+        raise HTTPException(status_code=400, detail="Invalid CSV file")
+    
+    # Convert date strings to date objects
+    df['release_date'] = pd.to_datetime(df['release_date']).dt.date
+    
+    record_added = 0
+    skipped = 0
+    
+    for _, row in df.iterrows():
         try:
-            release_date = datetime.strptime(movie["release_date"], "%Y-%m-%d").date()
-        except ValueError:
-            skipped_movies.append({"movie": movie, "reason": "Invalid date format (YYYY-MM-DD required)"})
-            continue 
-
-        # Check for duplicates in one query (faster than checking each movie separately)
-        if db.query(Movies).filter(Movies.primaryTitle == movie["primaryTitle"], Movies.release_date == release_date).first():
-            skipped_movies.append({"movie": movie, "reason": "Duplicate movie"})
-            continue  
-
-        # Create new movie object
-        new_movie = Movies(
-            primaryTitle=movie["primaryTitle"],
-            titleType=movie["titleType"],
-            genres=movie["genres"],
-            directors=movie["directors"],
-            writers=movie["writers"],
-            averageRating=movie["averageRating"],
-            numVotes=movie["numVotes"],
-            original_language=movie["original_language"],
-            production_companies=movie["production_companies"],
-            release_date=release_date,
-            budget=movie["budget"],
-            revenue=movie.get("revenue"),
-            runtime=movie["runtime"],
-            keywords=movie.get("keywords"),
-            trailer_views=movie.get("trailer_views"),
-            trailer_likes=movie.get("trailer_likes"),
-        )
-        
-        movies_to_add.append(new_movie)  # Add to batch list
-
-    if movies_to_add:
-        db.bulk_save_objects(movies_to_add)  # **Bulk insert for faster performance**
-        db.commit()  # Commit once at the end
-
+            movie_data = row.to_dict()
+            
+            # Check for existing movie
+            exists = db.query(Movies).filter(
+                Movies.primaryTitle == movie_data['primaryTitle'],
+                Movies.release_date == movie_data['release_date']
+            ).first()
+            
+            if exists:
+                skipped += 1
+                continue
+                
+            # Create new movie entry
+            movie = Movies(**movie_data)
+            db.add(movie)
+            record_added += 1
+            
+        except Exception as e:
+            print(f"Error processing row {_}: {str(e)}")
+            skipped += 1
+    
+    db.commit()
     return {
-        "message": "Movies upload complete",
-        "added_movies": [movie.primaryTitle for movie in movies_to_add],
-        "skipped_movies": skipped_movies
+        "message": "CSV upload complete",
+        "added": record_added,
+        "skipped": skipped
     }
 
 @app.put("/movies/{title}/")
@@ -285,7 +251,7 @@ def update_movie(title: str,
                  titleType: str | None = None,
                  release_date: str | None = None,
                  genres: str | None = None,
-                 direcors: str | None = None,
+                 directors: str | None = None,
                  writers: str | None = None,
                  actors: str | None = None,
                  keywords: str | None = None,
@@ -317,8 +283,8 @@ def update_movie(title: str,
     if genres is not None:
         movie.genres = genres
 
-    if direcors is not None:
-        movie.directors = direcors
+    if directors is not None:
+        movie.directors = directors
 
     if writers is not None:
         movie.writers = writers
@@ -377,3 +343,8 @@ def update_movie(title: str,
 
 # Fixed vs code path error using "set PATH=%CONDA_PREFIX%\Scripts;%PATH%"
 # Run the app using "uvicorn movie_api:app --reload"
+# Kill the app using "taskkill /IM uvicorn.exe /F"
+# Checked registered API routes using "curl http://127.0.0.1:8000/openapi.json"
+
+if __name__ == "__main__":
+    uvicorn.run("movie_api:app", host="127.0.0.1", port=8000, reload=True, workers=1)
