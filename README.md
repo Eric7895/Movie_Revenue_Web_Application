@@ -53,3 +53,10 @@ End Project: To deliver a web application supporting CRUD operation from data so
 ### 4.b **Web API Application**
 ### 4.c **Tableau Dashboard**
 ### 5 **Final Integration**
+---
+## How to run the application
+1) Create a virutal environment for this application, and ran pip install requirements.txt to install all the dependencies.
+2) Fill out your MySQL username and password in db.py, and create a movie_API database using MySQL workbench. 
+3) Run populate_data.py to get the latest information (Restricted by our raw file, we should be able to re-update the information once we figure out the source of the raw data file 'Movie_data.csv').
+4) Run populate_database.py to populate (insert) the data to the MySQL database.
+5) Run movie_API.py
