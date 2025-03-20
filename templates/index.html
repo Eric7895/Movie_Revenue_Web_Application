@@ -43,12 +43,120 @@
             </section>
 
             <section class="quick-search">
-                <h2>Quick Search By Movie Title</h2>
+                <h2>Parameter Search</h2>
                 <form id="searchForm">
-                    <input type="text" placeholder="Enter movie title..." class="search-input" name="title">
-                    <input type="text" placeholder="Enter release date in YYYY-MM-DD format..." class="search-input" name="release_date">
-                    <input type="text" placeholder="Enter genre..." class="search-input" name="genres">
+                    <input type="text" placeholder="Enter full or partial title..." class="search-input" name="title">
+                    <input type="text" placeholder="Enter date in YYYY-MM-DD format..." class="search-input" name="release_date">
+                    <input type="text" placeholder="Enter full or partial genre..." class="search-input" name="genres">
+                    <input type="text" placeholder="Enter full or partial production company..." class="search-input" name="production_companies">
                     <!-- Add more filters if needed -->
+                    
+                    <table class="search-table">
+                        <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Comparison</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><label for="averageRating">Rating</label></td>
+                                <td>
+                                    <select name="rating_condition">
+                                        <option value="">--Select--</option>
+                                        <option value="GE">≥</option>
+                                        <option value="LE">≤</option>
+                                        <option value="E">=</option>
+                                        <option value="G">></option>
+                                        <option value="L"><</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="0.1" name="averageRating"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="numVotes">Votes</label></td>
+                                <td>
+                                    <select name="votes_condition">
+                                        <option value="">--Select--</option>
+                                        <option value="GE">≥</option>
+                                        <option value="LE">≤</option>
+                                        <option value="E">=</option>
+                                        <option value="G">></option>
+                                        <option value="L"><</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="1" name="numVotes"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="budget">Budget</label></td>
+                                <td>
+                                    <select name="budget_condition">
+                                        <option value="">--Select--</option>
+                                        <option value="GE">≥</option>
+                                        <option value="LE">≤</option>
+                                        <option value="E">=</option>
+                                        <option value="G">></option>
+                                        <option value="L"><</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="100000" name="budget"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="revenue">Revenue</label></td>
+                                <td>
+                                    <select name="revenue_condition">
+                                        <option value="">--Select--</option>
+                                        <option value="GE">≥</option>
+                                        <option value="LE">≤</option>
+                                        <option value="E">=</option>
+                                        <option value="G">></option>
+                                        <option value="L"><</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="100000" name="revenue"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="runtime">Runtime</label></td>
+                                <td>
+                                    <select name="runtime_condition">
+                                        <option value="">--Select--</option>
+                                        <option value="GE">≥</option>
+                                        <option value="LE">≤</option>
+                                        <option value="E">=</option>
+                                        <option value="G">></option>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="1" name="runtime"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="trailer_views">Trailer Views</label></td>
+                                <td>
+                                    <select name="trailer_views_condition">
+                                        <option value="">--Select--</option>
+                                        <option value="GE">≥</option>
+                                        <option value="LE">≤</option>
+                                        <option value="E">=</option>
+                                        <option value="G">></option>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="100000" name="trailer_views"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="trailer_likes">Trailer Likes</label></td>
+                                <td>
+                                    <select name="trailer_likes_condition">
+                                        <option value="">--Select--</option>
+                                        <option value="GE">≥</option>
+                                        <option value="LE">≤</option>
+                                        <option value="E">=</option>
+                                        <option value="G">></option>
+                                    </select>
+                                </td>
+                                <td><input type="number" step="100000" name="trailer_likes"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <button type="submit" class="search-btn">Search</button>
                 </form>
                 <div id="results" class="results-container"></div>

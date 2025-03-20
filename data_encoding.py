@@ -14,13 +14,18 @@ def CPI_adjustment(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Convert budget and revenue to real dollar (CPI conversion)
     '''
-    for i in range(len(df)):
-        year = int(df['release_date'].iloc[i].split('-')[0])
-        budget = df['budget'].iloc[i]
-        revenue = df['revenue'].iloc[i]
-        df.loc[i, 'budget'] = cpi.inflate(budget, year)
-        df.loc[i, 'revenue'] = cpi.inflate(revenue, year)
-
+    df = df.copy()  # Avoid modifying the original DataFrame
+    
+    # Extract the year from release_date
+    df['year'] = df['release_date'].str.split('-').str[0].astype(int)
+    
+    # Apply CPI adjustment
+    df['budget'] = df.apply(lambda row: cpi.inflate(row['budget'], row['year']), axis=1)
+    df['revenue'] = df.apply(lambda row: cpi.inflate(row['revenue'], row['year']), axis=1)
+    
+    # Drop the temporary year column
+    df.drop(columns=['year'], inplace=True)
+    
     return df
 
 def encoding_people(df: pd.DataFrame, name_list: list, column_name: str, score_name: str, if_actor=False) -> pd.DataFrame:

@@ -7,6 +7,7 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
     formData.forEach((value, key) => {
         if (value.trim()) {
             console.log(key, value);
+            console.log(encodeURIComponent(key), encodeURIComponent(value.trim()));
             params.push(
                 `${encodeURIComponent(key)}=${encodeURIComponent(value.trim())}`
             );
@@ -14,16 +15,21 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
     });
 
     console.log('Params:', params);
+    console.log(`/movies_search/find/?${params.join('&')}`);
 
     try {
         const response = await fetch(`/movies_search/find/?${params.join('&')}`);
+        console.log('API Response:', response);
         const data = await response.json();
+        console.log('Data:', data);
         
-        if (data.MatchingMovies?.length > 0) {
-            displayResults(data.MatchingMovies);
+        if (data.Matching_Movies?.length > 0) {
+            console.log('Received movies:', data.Matching_Movies);
+            displayResults(data.Matching_Movies);
         } else {
             displayResults([]);
         }
+
     } catch (error) {
         console.error('Error:', error);
         displayResults([]);
@@ -37,7 +43,12 @@ function displayResults(movies) {
     console.log('API Response:', movies);
 
     if (!movies || movies.length === 0) {
-        resultsContainer.innerHTML = '<p>No movies found</p>';
+        resultsContainer.innerHTML = `
+            <div class="no-results">
+                <p>🎥 No movies found matching your search</p>
+                <small>Try different keywords or filters</small>
+            </div>
+        `;
         return;
     }
 

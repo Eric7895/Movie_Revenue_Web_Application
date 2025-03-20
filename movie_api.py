@@ -5,7 +5,9 @@ from sqlalchemy.orm import Session, sessionmaker
 from datetime import datetime
 from models import Movies, Base
 from db import get_engine
+from urllib.parse import unquote
 import pandas as pd
+
 import uvicorn
 
 app = FastAPI(
@@ -90,6 +92,7 @@ def query_movies_by_parameters(
     title: str | None = None,
     release_date: str | None = None,  # YYYY-MM-DD
     genres: str | None = None,
+    production_companies: str | None = None,
     averageRating: float | None = None,
     rating_condition: str | None = None,
     numVotes: float | None = None,
@@ -124,6 +127,9 @@ def query_movies_by_parameters(
 
     if genres is not None:
         query = query.filter(Movies.genres.contains(genres))
+    
+    if production_companies is not None:
+        query = query.filter(Movies.production_companies.contains(production_companies))
 
     # Apply conditions separately
     def apply_condition(field, value, condition):
@@ -169,23 +175,23 @@ def query_movies_by_parameters(
         {
             'Title': movie.primaryTitle,
             'Release_date': movie.release_date,
-            'genres': movie.genres,
-            'averageRating': movie.averageRating,
-            'numVotes': movie.numVotes,
-            'original_language': movie.original_language,
-            'production_companies': movie.production_companies,
-            'budget': movie.budget,
-            'revenue': movie.revenue,
-            'runtime': movie.runtime,
-            'keywords': movie.keywords,
-            'trailer_views': movie.trailer_views,
-            'trailer_likes': movie.trailer_likes
+            'Genres': movie.genres,
+            'Rating': movie.averageRating,
+            'Votes': movie.numVotes,
+            'Original_Language': movie.original_language,
+            'Production_Companies': movie.production_companies,
+            'Budget': movie.budget,
+            'Revenue': movie.revenue,
+            'Runtime': movie.runtime,
+            'Keywords': movie.keywords,
+            'Trailer_Views': movie.trailer_views,
+            'Trailer_Likes': movie.trailer_likes
         }
         for movie in results
     ]
 
     return {
-        "query_parameters": {
+        "Query_Parameters": {
             "title": title,
             "release_date": release_date,
             "genres": genres,
@@ -197,7 +203,7 @@ def query_movies_by_parameters(
             "trailer_views": trailer_views,
             "trailer_likes": trailer_likes
         },
-        'Matching Movies': movies
+        'Matching_Movies': movies
     }
 
 @app.post("/movies/upload/")
