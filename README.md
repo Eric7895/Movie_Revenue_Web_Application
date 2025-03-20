@@ -42,7 +42,7 @@ End Project: To deliver a web application supporting CRUD operation from data so
 - **Power BI OR Tableau Access** ✔️
 ### 1. **Literature Review** ✔️ (But will continue)
 - **Key Questions To Answer**: Possible Data Sources, Possible Models, Guide to preprocessing, Possible Approaches
-### 2. **Gathering Data Source** ✔️ (But will continue)
+### 2. **Gathering Data Source** ✔️
 - **Possible Data Sources**: IMDB (https://www.imdb.com), Box Office Mojo (https://www.boxofficemojo.com)
 - **Popular Features**: Cast, number of screen or theatres that the movie will be released on, genre, rating, budget, seasonality (time of release), whether it's sequel, word-of-mouth (number of views, number of likes, and percentage of positive and negative reviews), level of competition of a movie (whether it's released with other popular movies or not), level of advertisements.
 ### 3.a **Create a Reference Model for Benchmark** ✔️
