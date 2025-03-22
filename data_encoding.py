@@ -168,7 +168,6 @@ def encoding_top_languages(df: pd.DataFrame, top_n: int = 5) -> pd.DataFrame:
     This function helps to encode language information by selecting the top N most frequent languages
     from the 'original_language' column and one-hot encoding them. Languages not in the top N are grouped 
     into an 'other' category.
-
     '''
     # Fill missing values
     df['original_language'] = df['original_language'].fillna('unknown')

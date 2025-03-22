@@ -39,8 +39,6 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
 function displayResults(movies) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
-    
-    console.log('API Response:', movies);
 
     if (!movies || movies.length === 0) {
         resultsContainer.innerHTML = `
@@ -55,7 +53,7 @@ function displayResults(movies) {
     // Create table structure
     const table = document.createElement('table');
     table.className = 'movie-table';
-    
+
     // Create table header
     const thead = document.createElement('thead');
     thead.innerHTML = `
@@ -70,6 +68,8 @@ function displayResults(movies) {
             <th>Runtime</th>
             <th>Budget</th>
             <th>Revenue</th>
+            <th>Status</th>
+            <th>Title Type</th>
             <th>Keywords</th>
             <th>Trailer Views</th>
             <th>Trailer Likes</th>
@@ -92,13 +92,15 @@ function displayResults(movies) {
             <td>${movie.Runtime} min</td>
             <td>$${movie.Budget?.toLocaleString() || 'N/A'}</td>
             <td>$${movie.Revenue?.toLocaleString() || 'N/A'}</td>
+            <td>${movie.Status || 'N/A'}</td>
+            <td>${movie.Title_Type || 'N/A'}</td>
             <td>${movie.Keywords || 'N/A'}</td>
             <td>${movie.Trailer_Views?.toLocaleString() || 'N/A'}</td>
             <td>${movie.Trailer_Likes?.toLocaleString() || 'N/A'}</td>
         `;
         tbody.appendChild(row);
     });
-    
+
     table.appendChild(tbody);
     resultsContainer.appendChild(table);
 }

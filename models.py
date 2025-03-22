@@ -32,6 +32,7 @@ class Movies(Base):
     budget = Column(Float, nullable=False)
     revenue = Column(Float, nullable=True)
     runtime = Column(Float, nullable=False)
+    status = Column(String(50), nullable=False)
     keywords = Column(String(1000), nullable=True, comment='A string with "-" as separator')
     trailer_views = Column(Float, nullable=True)
     trailer_likes = Column(Float, nullable=True)
@@ -39,4 +40,5 @@ class Movies(Base):
     # Adding a CheckConstraint separately for titleType
     __table_args__ = (
         CheckConstraint(titleType.in_(['movie', 'tvMovie']), name="check_titleType"),
+        CheckConstraint(status.in_(['Released', 'Not Released']), name="check_status"),
     )

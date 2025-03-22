@@ -23,6 +23,13 @@ Base.metadata.create_all(engine)
 
 local_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Integrate populate_database.py
+def update(): 
+    temp = input('Do you want to update the database? (y/n) ')
+    if temp == 'y':
+        from populate_database import populate
+        populate()
+
 # Dependency for database session
 def get_db():
     db = local_session()
@@ -46,7 +53,7 @@ def get_movies_basic(db: Session = Depends(get_db)):
     return [{"Title": movie.primaryTitle, "Release_date": movie.release_date, "genres": movie.genres, 
              "Rating": movie.averageRating, "Votes": movie.numVotes, "original_language": movie.original_language, 
              "Production_companies": movie.production_companies, 
-             "Budget": movie.budget, "Revenue": movie.revenue, "Runtime": movie.runtime, "keywords": movie.keywords,
+             "Budget": movie.budget, "Revenue": movie.revenue, "Runtime": movie.runtime, "status": movie.status, "keywords": movie.keywords,
              "Trailer_Views": movie.trailer_views, "Trailer_Likes": movie.trailer_likes} 
             for movie in movies]
 
@@ -83,7 +90,7 @@ def get_movies_search(title: str, db: Session = Depends(get_db)):
     return [{"Title": movie.primaryTitle, "Release_date": movie.release_date, "Genres": movie.genres, 
              "Rating": movie.averageRating, "Votes": movie.numVotes, "Original_Language": movie.original_language, 
              "Production_Companies": movie.production_companies, 
-             "Budget": movie.budget, "Revenue": movie.revenue, "Runtime": movie.runtime, "Keywords": movie.keywords,
+             "Budget": movie.budget, "Revenue": movie.revenue, "Runtime": movie.runtime, "status": movie.status, "Keywords": movie.keywords,
              "Trailer_Views": movie.trailer_views, "Trailer_Likes": movie.trailer_likes} 
             for movie in movies]
 
@@ -107,6 +114,8 @@ def query_movies_by_parameters(
     views_condition: str | None = None,
     trailer_likes: float | None = None,
     likes_condition: str | None = None,
+    status: str | None = None,
+    titleType: str | None = None,
     db: Session = Depends(get_db)
 ):
     '''
@@ -130,6 +139,12 @@ def query_movies_by_parameters(
     
     if production_companies is not None:
         query = query.filter(Movies.production_companies.contains(production_companies))
+
+    if status is not None:
+        query = query.filter(Movies.status == status)
+
+    if titleType is not None:
+        query = query.filter(Movies.titleType == titleType)
 
     # Apply conditions separately
     def apply_condition(field, value, condition):
@@ -172,23 +187,25 @@ def query_movies_by_parameters(
         raise HTTPException(status_code=404, detail="No movies found matching the query")
 
     movies = [
-        {
-            'Title': movie.primaryTitle,
-            'Release_date': movie.release_date,
-            'Genres': movie.genres,
-            'Rating': movie.averageRating,
-            'Votes': movie.numVotes,
-            'Original_Language': movie.original_language,
-            'Production_Companies': movie.production_companies,
-            'Budget': movie.budget,
-            'Revenue': movie.revenue,
-            'Runtime': movie.runtime,
-            'Keywords': movie.keywords,
-            'Trailer_Views': movie.trailer_views,
-            'Trailer_Likes': movie.trailer_likes
-        }
-        for movie in results
+    {
+        'Title': movie.primaryTitle,
+        'Release_date': movie.release_date,
+        'Genres': movie.genres,
+        'Rating': movie.averageRating,
+        'Votes': movie.numVotes,
+        'Original_Language': movie.original_language,
+        'Production_Companies': movie.production_companies,
+        'Budget': movie.budget,
+        'Revenue': movie.revenue,
+        'Runtime': movie.runtime,
+        'Status': movie.status,
+        'Title_Type': movie.titleType,  
+        'Keywords': movie.keywords,
+        'Trailer_Views': movie.trailer_views,
+        'Trailer_Likes': movie.trailer_likes
+    } for movie in results
     ]
+
 
     return {
         "Query_Parameters": {

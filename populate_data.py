@@ -234,7 +234,7 @@ def main_merge():
                             right_on=['title', 'year_released'])
     
     movie_stg1 = movie_stg0.drop(['titleId', 'originalTitle', 'startYear', 'id', 'title', 'genres_y',
-                                  'overview', 'popularity', 'status', 'tagline', 'vote_average', 'vote_count',
+                                  'overview', 'popularity', 'tagline', 'vote_average', 'vote_count',
                                   'credits', 'poster_path', 'backdrop_path', 'recommendations',
                                   'year_released'], axis=1
                                   ).drop_duplicates(['primaryTitle', 'release_date']
