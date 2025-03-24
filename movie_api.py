@@ -225,49 +225,38 @@ def query_movies_by_parameters(
 
 @app.post("/movies/upload/")
 def upload_movies(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    """
-    Upload movies from a CSV file
-    """
+    print(f"Received upload request")  # Check if API receives request
     try:
-        df = pd.read_csv(file.file)
-    except FileNotFoundError:
-        raise HTTPException(status_code=400, detail="Invalid CSV file")
-    
-    # Convert date strings to date objects
-    df['release_date'] = pd.to_datetime(df['release_date']).dt.date
-    
-    record_added = 0
-    skipped = 0
-    
-    for _, row in df.iterrows():
-        try:
+        print(f"Received file: {file.filename}")  # Ensure file is read
+        df = pd.read_csv(file.file, parse_dates=["release_date"])
+        
+        df["release_date"] = df["release_date"].dt.date  # Ensure date format
+        
+        record_added = 0
+        skipped = 0
+        for _, row in df.iterrows():
             movie_data = row.to_dict()
             
-            # Check for existing movie
             exists = db.query(Movies).filter(
-                Movies.primaryTitle == movie_data['primaryTitle'],
-                Movies.release_date == movie_data['release_date']
+                Movies.primaryTitle == movie_data['primaryTitle']
             ).first()
             
             if exists:
                 skipped += 1
                 continue
-                
-            # Create new movie entry
+            
             movie = Movies(**movie_data)
             db.add(movie)
             record_added += 1
-            
-        except Exception as e:
-            print(f"Error processing row {_}: {str(e)}")
-            skipped += 1
+        
+        db.commit()
+        print(f"Added: {record_added}, Skipped: {skipped}")  # Ensure commit happens
+
+        return {"message": "Upload complete", "added": record_added, "skipped": skipped}
     
-    db.commit()
-    return {
-        "message": "CSV upload complete",
-        "added": record_added,
-        "skipped": skipped
-    }
+    except Exception as e:
+        print("Error:", e)  # Log error in terminal
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @app.put("/movies/{title}/")
 def update_movie(title: str,
@@ -277,6 +266,7 @@ def update_movie(title: str,
                  directors: str | None = None,
                  writers: str | None = None,
                  actors: str | None = None,
+                 status: str | None = None,
                  keywords: str | None = None,
                  production_companies: str | None = None,
                  original_language: str | None = None,
@@ -314,6 +304,9 @@ def update_movie(title: str,
 
     if actors is not None:
         movie.actors = actors
+
+    if status is not None:
+        movie.status = status
 
     if keywords is not None:
         movie.keywords = keywords
@@ -359,10 +352,28 @@ def update_movie(title: str,
                 'budget': movie.budget,
                 'revenue': movie.revenue,
                 'runtime': movie.runtime,
+                'status': movie.status,
                 'keywords': movie.keywords,
                 'trailer_views': movie.trailer_views,
                 'trailer_likes': movie.trailer_likes    
             }}
+
+@app.delete("/delete/")
+def delete_movie(title: str, 
+                 release_date: str,
+                 db: Session = Depends(get_db)):
+    """
+    Delete a movie by title and release date
+    """
+    movie = db.query(Movies).filter(Movies.primaryTitle == title).filter(Movies.release_date == release_date).first()
+
+    if not movie:
+        raise HTTPException(status_code=404, detail="Movie not found")
+
+    db.delete(movie)
+    db.commit()
+
+    return {"message": "Movie deleted successfully"}
 
 # Fixed vs code path error using "set PATH=%CONDA_PREFIX%\Scripts;%PATH%"
 # Run the app using "uvicorn movie_api:app --reload"

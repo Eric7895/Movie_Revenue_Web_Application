@@ -1,3 +1,4 @@
+// Parameter search - extract key value pairs
 document.getElementById('searchForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -33,6 +34,44 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
     } catch (error) {
         console.error('Error:', error);
         displayResults([]);
+    }
+});
+
+// Upload feature
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    const fileInput = document.getElementById('fileInput');
+    if (!fileInput.files.length) {
+        console.log("No file selected");
+        return;
+    }
+
+    console.log("File selected:", fileInput.files[0].name);
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    try {
+        console.log("Sending upload request...");
+        const response = await fetch('/movies/upload/', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        console.log("Response received:", result);
+
+        if (result.added === 0 && result.skipped === 0) {
+            document.getElementById('uploadMessage').innerText = "No movies added";
+        }
+        else {
+            document.getElementById('uploadMessage').innerText = 
+            `Upload successful: ${result.added} added, ${result.skipped} skipped`;}
+        
+    } catch (error) {
+        console.error("Upload failed:", error);
+        document.getElementById('uploadMessage').innerText = "Upload failed";
     }
 });
 

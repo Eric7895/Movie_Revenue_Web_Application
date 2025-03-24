@@ -257,6 +257,11 @@ header {
     }
 }
 
+/* Upload button */
+.upload-section {
+    margin-bottom: 3rem;
+}
+
 /* Utility Classes */
 .text-center {
     text-align: center;

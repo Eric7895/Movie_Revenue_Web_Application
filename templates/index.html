@@ -42,6 +42,15 @@
                 </div>
             </section>
 
+            <section class="upload-section">
+                <h2>Upload Movie Data in .csv</h2>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" id="fileInput" name="file" accept=".csv" required>
+                    <button type="submit" class="upload-btn">Upload</button>
+                </form>
+                <div id="uploadMessage"></div>
+            </section>
+
             <section class="quick-search">
                 <h2>Parameter Search</h2>
                 <form id="searchForm" action="/search" method="GET">
