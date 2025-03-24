@@ -1,5 +1,7 @@
 # Movie Revenue Web Application
 
+![Alt text](image/website_screenshot.png)
+
 ## Objective ✔️
 
 The main objectives are:
