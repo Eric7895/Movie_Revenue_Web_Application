@@ -177,6 +177,7 @@ rich-toolkit=0.11.3=pyh29332c3_0
 safetensors=0.5.2=py313hf3b5b86_0
 scikit-learn=1.6.1=py313h4f67946_0
 scipy=1.15.1=py313hdc736f6_0
+seaborn=0.13.2=pypi_0
 sentence-transformers=3.4.1=pypi_0
 setuptools=70.2.0=pypi_0
 shellingham=1.5.4=pyhd8ed1ab_1
