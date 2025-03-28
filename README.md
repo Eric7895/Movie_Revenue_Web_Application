@@ -24,6 +24,7 @@ End Project: To deliver a web application supporting CRUD operation from data so
 - https://github.com/vikranth3140/movie-revenue-prediction
 - https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies
 - https://github.com/arnab-api/movie-analysis
+- https://arxiv.org/pdf/2110.07039
 ---
 ## File Description:
 - populate_data.py - Create the movie_data.csv file, by requesting downloadable IMDB official data, and integrated it with a pre-existing movie dataset for more featuring.
