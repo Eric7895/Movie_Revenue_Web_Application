@@ -28,20 +28,21 @@ def CPI_adjustment(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
-def encoding_people(df: pd.DataFrame, name_list: list, column_name: str, score_name: str, if_actor=False) -> pd.DataFrame:
+def encoding_people(df: pd.DataFrame, name_list: list, actor_df: pd.DataFrame, column_name: str, score_name: str, if_actor=False) -> pd.DataFrame:
     '''
-    This function helps to encode all director, writer, and actor information by computing a score for total famous people.
-    If if_actor is True, it also adds a binary column 'is_documentary' that is 1 if actor information is missing (indicating a documentary)
-    and 0 otherwise.
+    Encodes director, writer, and actor information by computing a score for total famous people.
+    If if_actor is True, it also calculates an overall star score based on max star scores of actors in the movie.
+    Additionally, it adds a binary column 'is_documentary' if actor information is missing (indicating a documentary).
     '''
     output_df = []
+    
     for i in range(len(df)):
         movie_title = df['primaryTitle'].iloc[i]
         
         if if_actor:
             actor_info = df[column_name].iloc[i]
             if pd.isnull(actor_info) or actor_info == '':
-                output_df.append({'name': movie_title, score_name: 0, 'is_documentary': 1})
+                output_df.append({'name': movie_title, score_name: 0, 'star_score': 0, 'is_documentary': 1})
                 continue
             else:
                 is_documentary_flag = 0
@@ -52,16 +53,24 @@ def encoding_people(df: pd.DataFrame, name_list: list, column_name: str, score_n
         
         names = df[column_name].iloc[i].split(',')
         score = 0
+        total_star_score = 0  # Store total star power of movie
+        
         for name in names:
-            if name_list.count(name) > 0:
-                score += 1
+            if name in name_list:
+                score += 1  # Count famous people
+            if if_actor:
+                # Get max star score for the actor if they exist in actor_df
+                actor_star_score = actor_df.loc[actor_df['name'] == name, 'star_score']
+                if not actor_star_score.empty:
+                    total_star_score += actor_star_score.max()  # Max star score for that actor
         
         if if_actor:
-            output_df.append({'name': movie_title, score_name: score, 'is_documentary': is_documentary_flag})
+            output_df.append({'name': movie_title, score_name: score, 'star_score': total_star_score, 'is_documentary': is_documentary_flag})
         else:
             output_df.append({'name': movie_title, score_name: score})
             
     return pd.DataFrame(output_df).drop_duplicates(['name'])
+
 
 def encoding_genre(df: pd.DataFrame) -> pd.DataFrame:
     '''
@@ -81,35 +90,43 @@ def encoding_genre(df: pd.DataFrame) -> pd.DataFrame:
     
     return pd.get_dummies(pd.DataFrame(category_df), columns=['genres'], dtype=float).drop_duplicates(['name'])
 
-def encoding_date(df: pd.DataFrame) -> pd.DataFrame:
-    '''
-    This function helps to encode date information.
-    '''
+def encoding_holiday_competitive(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    This function encodes movie release dates into two binary variables:
+    - is_holiday_release: 1 if released near a major holiday, else 0
+    - is_competitive_month: 1 if released in a high-revenue month, else 0
+    """
+    # Ensure release_date is in datetime format
+    df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
 
-    output_df = []
-
-    month_dict = {
-        '01': 'January',
-        '02': 'February',
-        '03': 'March',
-        '04': 'April',
-        '05': 'May',
-        '06': 'June',
-        '07': 'July',
-        '08': 'August',
-        '09': 'September',
-        '10': 'October',
-        '11': 'November',
-        '12': 'December'
+    # Define major holidays (approximate release windows)
+    holiday_dates = {
+        'Christmas': ('12-20', '12-31'),
+        'Thanksgiving': ('11-20', '11-30'),
+        'Halloween': ('10-25', '10-31'),
+        'Independence Day': ('07-01', '07-07'),
+        'Memorial Day': ('05-25', '05-31'),
+        'Labor Day': ('09-01', '09-07'),
+        'Valentine’s Day': ('02-10', '02-14'),
+        'Chinese New Year': ('01-20', '02-20')  # Varies but falls around Feb
     }
 
-    for i in range(len(df)):
-        name = df['primaryTitle'].iloc[i]
-        month = df['release_date'].iloc[i].split('-')[1]
-        if month in month_dict:
-            output_df.append({'name': name, 'month': month_dict[month]})
+    # Define competitive months (historically high-grossing periods)
+    competitive_months = ['05', '06', '07', '11', '12']
 
-    return pd.get_dummies(pd.DataFrame(output_df), columns=['month'], dtype=float)
+    # Initialize binary columns
+    df['is_holiday_release'] = 0
+    df['is_competitive_month'] = df['release_date'].dt.strftime('%m').isin(competitive_months).astype(int)
+
+    # Assign holiday releases
+    for start, end in holiday_dates.values():
+        df.loc[
+            (df['release_date'].dt.strftime('%m-%d') >= start) & 
+            (df['release_date'].dt.strftime('%m-%d') <= end), 
+            'is_holiday_release'
+        ] = 1
+
+    return df[['primaryTitle', 'is_holiday_release', 'is_competitive_month']].rename(columns={'primaryTitle': 'name'}).drop_duplicates(['name'])
 
 def encoding_production_companies(df: pd.DataFrame, top_companies: list = None,
                                         column_name: str = 'production_companies',
@@ -283,11 +300,11 @@ def main(verbose=False, year: int = 2025):
 
     # Phase 1: Initial encoding of categorical variables and features (movie_stg1)
     movie_type = pd.get_dummies(movie_stg0, columns=['titleType'], dtype=float)
-    director = encoding_people(movie_stg0, director_writer_names, 'directors', 'director_score')
-    writer = encoding_people(movie_stg0, director_writer_names, 'writers', 'writer_score')
-    actor = encoding_people(movie_stg0, actors['name'].to_list(), 'actors', 'actor_score', if_actor=True)
+    director = encoding_people(movie_stg0, director_writer_names, actors, 'directors', 'director_score')
+    writer = encoding_people(movie_stg0, director_writer_names, actors, 'writers', 'writer_score')
+    actor = encoding_people(movie_stg0, actors['name'].to_list(), actors, 'actors', 'actor_score', if_actor=True)
     genre = encoding_genre(movie_stg0)
-    date = encoding_date(movie_stg0)
+    date = encoding_holiday_competitive(movie_stg0)
     production = encoding_production_companies(movie_stg0)
     language = encoding_top_languages(movie_stg0)
 
