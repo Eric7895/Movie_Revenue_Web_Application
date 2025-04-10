@@ -58,6 +58,7 @@ filelock=3.13.1=pypi_0
 fonttools=4.56.0=pypi_0
 frozenlist=1.5.0=py313hb4c8b1a_1
 fsspec=2024.6.1=pypi_0
+future=1.0.0=pypi_0
 greenlet=3.1.1=py313h5813708_1
 h11=0.14.0=pyhd8ed1ab_1
 h2=4.1.0=pyhd8ed1ab_1
@@ -144,6 +145,7 @@ pickleshare=0.7.5=pyhd8ed1ab_1004
 pillow=11.0.0=pypi_0
 pip=24.3.1=pyh145f28c_2
 platformdirs=4.3.6=pyhd8ed1ab_1
+progressbar2=4.5.0=pypi_0
 prompt-toolkit=3.0.50=pyha770c72_0
 propcache=0.2.1=py313hb4c8b1a_1
 psutil=6.1.1=py313ha7868ed_0
@@ -154,6 +156,7 @@ pyarrow-core=19.0.0=py313h0d32010_0_cuda
 pycparser=2.22=pyh29332c3_1
 pydantic=2.10.4=pyh3cfb1c2_0
 pydantic-core=2.27.2=py313hf3b5b86_0
+pygam=0.8.0=pypi_0
 pygments=2.18.0=pyhd8ed1ab_1
 pymysql=1.1.1=pyhd8ed1ab_1
 pyparsing=3.2.1=pypi_0
@@ -163,6 +166,7 @@ python-dateutil=2.9.0.post0=pyhff2d567_1
 python-dotenv=1.0.1=pyhd8ed1ab_1
 python-multipart=0.0.20=pyhff2d567_0
 python-tzdata=2024.2=pyhd8ed1ab_1
+python-utils=3.9.1=pypi_0
 python-xxhash=3.5.0=py313ha7868ed_1
 python_abi=3.13=5_cp313
 pytz=2024.1=pyhd8ed1ab_0
