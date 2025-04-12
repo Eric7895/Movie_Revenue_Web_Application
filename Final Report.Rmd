@@ -1,0 +1,51 @@
+---
+title: "Movie Revenue Prediction"
+author: "Eric Wu"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introduction
+
+### Background
+
+The film industry faces big financial risks, with studios investing millions in production and marketing without a guarantee of success. High stakes and unpredictable market conditions mean that having a reliable way of predicting movie revenues is crucial. When factors like changing viewer tastes and economic challenges come into play, older methods often fail to capture the ever-changing nature of the industry, which can lead to expensive mistakes.
+
+The move toward more data-driven methods shows the need to cut these risks while making planning better. Using historical data and modern tools helps turn complex market signals into practical insights. This change not only aims to improve revenue predictions but also to give a clearer picture of the factors behind financial success, ultimately supporting better planning and investment decisions.
+
+### Goal and Objective
+
+Our goal is to develop a robust, data-driven model that predicts revenue over a half-year window for future movie releases with near state-of-the-art accuracy. We will achieve this by evaluating the influence of pre-release metadata on movie revenues, adjusting for dollar inflation using the Consumer Price Index (CPI) to standardize revenue figures across different time periods, and ensuring a proper time-ordered approach where only past data is used to predict future events, thereby preventing data leakage. Additionally, we aim to identify key indicators from the metadata that have a significant impact on the financial success of a movie.
+
+In addition to building our predictive model, we plan to deploy it in a user-friendly manner. To do so, we will set up a SQL database connection to support our FASTAPI application, design the frontend using CSS, HTML, and JavaScript, and deploy the predictive model as an interactive web feature.
+
+# Prior Work
+
+# Method
+
+### Linear Modeling
+
+### Nonlinear Modeling
+
+# Result
+
+### Data
+
+### Model Result
+
+### SQL Connection
+
+### Website Navigation
+
+### Tabelau Dashboard
+
+# Discussion
+
+### Challenges and Limitation
+
+### Next Step
+
+# Conclusion
