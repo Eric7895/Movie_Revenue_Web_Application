@@ -26,6 +26,34 @@ In addition to building our predictive model, we plan to deploy it in a user-fri
 
 # Method
 
+### Data Collection and Feature Engineering
+
+Starting with data collection, our group chose to use the official IMDB non-commercial datasets available at https://developer.imdb.com/non-commercial-datasets/. This source is updated daily and is highly compatible with scraping tools. From these official datasets, we obtained many primary attributes such as title, directors, writers, actors, IMDB rating, number of votes, release date, runtime, and genres.
+
+In addition to the IMDB dataset, we also found a secondary dataset on GitHub that includes supplementary variables such as trailer views, trailer likes, revenue, budget, keywords, and more. By incorporating this dataset, we avoided the ongoing hassle of sourcing box office data manually. However, since this dataset is static, we lose the ability to refresh it using scraper tools. To implement a complete Extract, Transform, Load (ETL) pipeline, we would need to identify a legal and up-to-date source for scraping box office numbers and use the YouTube API—combined with natural language processing (NLP) techniques—to extract trailer-related metrics such as views and likes.
+
+Additionally, we attempted to scrape actor, director, and writer "billboards" for feature engineering purposes. We ensured that the sources used were recently updated and broadly representative. For directors and writers, we used an IMDb list created by a user, which was most recently updated on April 15, 2025, and has received 98,000 views. For actors, we used The Numbers billboard to collect actor information and corresponding star scores. We acknowledge that these billboards—especially those created by users—may contain biases, and addressing this bias is a potential area for future improvement.
+
+Moving on to data processing, we removed all movies with null values and still retained a relatively sufficient number of records for model training. We also eliminated duplicate entries by using a composite primary key consisting of the movie title and release date. After cleaning the data, we began feature engineering. Our encoding approaches for each categorical variable are as follows:
+
+ - **Director and Writer**: We counted the total number of famous directors and writers associated with each movie, based on their appearance in our billboard lists.
+
+ - **Actor**: In addition to counting the number of famous actors, we also computed the cumulative star score for each movie.
+
+ - **Genre**: Since the genre field contains comma-separated strings, we extracted only the primary genre (i.e., the first listed) and created dummy variables based on these values.
+
+ - **Release Date**: We created two binary variables—is_holiday_release and is_competitive_month. The holiday variable flags releases near major holidays (e.g., Christmas, Thanksgiving, Halloween, Independence Day, Memorial Day, Labor Day, Valentine’s Day, and Chinese New Year), while the competitive month variable flags historically high-grossing periods (May, June, July, November, and December).
+
+ - **Production Companies**: We created a binary variable, production_popular, to indicate whether a movie was produced by a major company. Our list includes: Warner Bros, Universal Pictures, Walt Disney, Columbia Pictures, 20th Century Fox, Paramount, Marvel Studios, New Line, DreamWorks, Lionsgate, MGM, Sony Pictures, Lucasfilm, Pixar, Legendary, A24, Focus Features, Amblin, Working Title, StudioCanal, and Castle Rock. In the future, we may use string similarity measures (e.g., cosine similarity) to better capture variations in company names.
+
+ - **Languages**: We selected the top five most common languages and created dummy variables for each. All other languages were grouped into an “Other Languages” category. In the future, we may consider combining these into a single variable to reduce multicollinearity.
+
+ - **Keywords**: We used the pretrained BERT model 'all-mpnet-base-v2' to embed each keyword into high-dimensional vectors. We then applied Principal Component Analysis (PCA) to reduce the dimensionality, selecting the first principal component. We ensured that the first eigenvalue explained at least 40% of the variance. Using a model like BERT helps preserve the semantic meaning of keywords.
+
+By incorporating these features, we greatly expanded our pool of predictors and enhanced the expressiveness of our dataset for model training.
+ 
+### Star Score
+
 ### Linear Modeling
 
 ### Nonlinear Modeling
