@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.17)  17 APR 2025 12:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.17)  17 APR 2025 15:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -449,25 +449,31 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 [3]
 
-[4] (./Final-Report.aux)
+[4]
+
+[5]
+
+[6]
+
+[7] (./Final-Report.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-03-26>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 11255 strings out of 471607
- 174133 string characters out of 5519714
- 566429 words of memory out of 5000000
- 37621 multiletter control sequences out of 15000+600000
+ 11267 strings out of 471607
+ 174326 string characters out of 5519714
+ 566758 words of memory out of 5000000
+ 37626 multiletter control sequences out of 15000+600000
  670240 words of font info for 79 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 89i,6n,93p,542b,442s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,6n,93p,542b,502s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb>
-Output written on Final-Report.pdf (4 pages, 147795 bytes).
+Output written on Final-Report.pdf (7 pages, 157929 bytes).
 PDF statistics:
- 143 PDF objects out of 1000 (max. 8388607)
- 124 compressed objects within 2 object streams
- 25 named destinations out of 1000 (max. 500000)
+ 162 PDF objects out of 1000 (max. 8388607)
+ 140 compressed objects within 2 object streams
+ 32 named destinations out of 1000 (max. 500000)
  161 words of extra memory for PDF output out of 10000 (max. 10000000)
 

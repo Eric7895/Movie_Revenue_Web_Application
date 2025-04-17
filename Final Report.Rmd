@@ -67,7 +67,7 @@ Objective: Create numerical features that capture both the presence of recognize
 
 ### Linear Modeling
 
-In this section we summarize the linear‑based approaches you have implemented, report their performance, examine diagnostic plots, and identify concrete next steps to push R-Squared above 0.92 and RMSE below \$7M.
+In this section we summarize the linear‑based approaches you have implemented, report their performance, examine diagnostic plots, and identify concrete next steps to push R-Squared above 0.92 and RMSE below $7M.
 
 #### Ordinary Least Squares (OLS) Regression
 
@@ -83,19 +83,15 @@ Ordinary Least Squares (OLS) is the foundational linear regression technique. It
 
 Violations (e.g., heteroskedasticity, collinearity) can lead to biased estimates or inflated variances.
 
-```{python}
-
-```
-
 Target: Log‐transformed revenue, back‐transformed for RMSE/R-Squared computation
 
 Validation: 5‑fold KFold (chronological, no shuffle), then hold‑out test on the newest 20% of films
 
-Cross-validated RMSE: 19.43 Millions Cross-validated R-Squared: 0.79
+Cross-validaddted RMSE: 19.43 Millions Cross-validated R-Squared: 0.79
 
 RMSE: 9.01 Million R-Squared: 0.86
 
-Diagnostic:\
+Diagnostic:
 Residuals vs Fitted shows clear heteroskedasticity (variance increases with fitted revenue).
 
 Q‑Q plot exhibits heavy right tail—extreme overestimation for blockbusters.
@@ -107,20 +103,6 @@ No formal outlier removal or robust weighting was applied.
 #### Elastic Net Regression
 
 Elastic Net combines Lasso (L1) and Ridge (L2) penalties to control model complexity and handle multicollinearity. The L1 penalty can shrink some coefficients exactly to zero (feature selection), while L2 distributes shrinkage across correlated predictors. Elastic Net is well‑suited when predictors are correlated—unlike Lasso, which arbitrarily picks one, Elastic Net keeps groups of correlated features together.
-
-```{python}
-
-```
-
-Hyperparameter Tuning via GridSearchCV over:
-
--   alpha (overall strength of regularization)
-
--   l1_ratio (mixing between L1 and L2)
-
-Best Parameters:
-
--   alpha ≈ 3×10⁻⁴, l1_ratio ≈ 0.95 (nearly Lasso, but with small L2)
 
 Results:
 
@@ -138,16 +120,11 @@ Takeaway: Elastic Net improves predictive accuracy by reducing overfitting and s
 
 Generalized Additive Models (GAMs) extend linear models by fitting smooth functions (splines) to each predictor, allowing for flexible, nonlinear relationships while maintaining an additive structure. Each term SJXJ estimated via penalized splines, and overall interpretability is preserved through partial dependency plots, which show how the target responds to each feature holding others constant.
 
-```{python}
-
-
-```
-
 Performance
 
-Test RMSE = \$7.33M (best overall)
+Test RMSE = $7.33M (best overall)
 
-Test R-Squared = 0.91 (closest to stretch goal)
+Test R-Squared = 0.91 (closest to stretch goal)
 
 MAE: 3.27 M
 
@@ -187,7 +164,7 @@ Next Steps
 
 -   Interaction Terms: Explore additional interactions (e.g., trailer engagement × release month) in regularized models.
 
-Goal: Push Test RMSE below \$7M and Test R-Squared above 0.92
+Goal: Push Test RMSE below $7M and Test R-Squared above 0.92
 
 ### Nonlinear Modeling
 
@@ -227,3 +204,5 @@ To further enhance website functionality, we also experimented with CSS styling 
 # Reference
 
 -   Testing
+
+
