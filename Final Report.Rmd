@@ -59,7 +59,137 @@ By incorporating these features, we greatly expanded our pool of predictors and 
 
 ### Star Score
 
+The Star Score feature aims to quantify the impact of cast, directors, and writers on a movie’s potential box-office performance by leveraging external “fame” data. In this section, we outline a general approach to computing and integrating Star Score into our modeling pipeline. As more detailed information becomes available—such as finalized name lists, precise scoring metrics from thenumbers.com, and actor metadata—this section will be updated and refined.
+
+Intuition: High-profile talent often drives audience interest and marketing reach, potentially boosting revenue.
+
+Objective: Create numerical features that capture both the presence of recognized industry figures (directors, writers) and the cumulative prominence of lead actors.
+
+--potential visualization—
+
 ### Linear Modeling
+
+In this section we summarize the linear‑based approaches you have implemented, report their performance, examine diagnostic plots, and identify concrete next steps to push R-Squared above 0.92 and RMSE below \$7M.
+
+#### Ordinary Least Squares (OLS) Regression
+
+Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prized for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
+
+-   Linearity between features and target
+
+-   Homoskedasticity (constant variance of residuals)
+
+-   Normality of residuals
+
+-   No multicollinearity among predictors
+
+Violations (e.g., heteroskedasticity, collinearity) can lead to biased estimates or inflated variances.
+
+```{python}
+
+```
+
+Target: Log‐transformed revenue, back‐transformed for RMSE/R-Squared computation
+
+Validation: 5‑fold KFold (chronological, no shuffle), then hold‑out test on the newest 20% of films
+
+Cross-validated RMSE: 19.43 Millions Cross-validated R-Squared: 0.79
+
+RMSE: 9.01 Million R-Squared: 0.86
+
+Diagnostic:\
+Residuals vs Fitted shows clear heteroskedasticity (variance increases with fitted revenue).
+
+Q‑Q plot exhibits heavy right tail—extreme overestimation for blockbusters.
+
+Histogram of residuals is sharply peaked with heavy tails.
+
+No formal outlier removal or robust weighting was applied.
+
+#### Elastic Net Regression
+
+Elastic Net combines Lasso (L1) and Ridge (L2) penalties to control model complexity and handle multicollinearity. The L1 penalty can shrink some coefficients exactly to zero (feature selection), while L2 distributes shrinkage across correlated predictors. Elastic Net is well‑suited when predictors are correlated—unlike Lasso, which arbitrarily picks one, Elastic Net keeps groups of correlated features together.
+
+```{python}
+
+```
+
+Hyperparameter Tuning via GridSearchCV over:
+
+-   alpha (overall strength of regularization)
+
+-   l1_ratio (mixing between L1 and L2)
+
+Best Parameters:
+
+-   alpha ≈ 3×10⁻⁴, l1_ratio ≈ 0.95 (nearly Lasso, but with small L2)
+
+Results:
+
+-   RMSE: 8.09 Millions
+
+-   R-Squared: 0.89
+
+Regularization reduced overfitting slightly (RMSE 0.9M down, R-Squared 0.03 up).
+
+Coefficients remain interpretable; none were driven exactly to zero given high l1_ratio.
+
+Takeaway: Elastic Net improves predictive accuracy by reducing overfitting and stabilizing coefficient estimates in the presence of moderate collinearity (e.g., between marketing metrics). It balances interpretability (non‑zero coefficients) with regularization.
+
+#### Generalized Additive Model (GAM)
+
+Generalized Additive Models (GAMs) extend linear models by fitting smooth functions (splines) to each predictor, allowing for flexible, nonlinear relationships while maintaining an additive structure. Each term SJXJ estimated via penalized splines, and overall interpretability is preserved through partial dependency plots, which show how the target responds to each feature holding others constant.
+
+```{python}
+
+
+```
+
+Performance
+
+Test RMSE = \$7.33M (best overall)
+
+Test R-Squared = 0.91 (closest to stretch goal)
+
+MAE: 3.27 M
+
+Partial Dependence:
+
+-   Trailer Likes (log): Roughly linear positive effect—more trailer engagement reliably boosts revenue expectations.
+
+-   Budget (log): Nonlinear pattern—diminishing returns at mid‑range budgets, then a sharp rise for very large budgets (blockbusters).
+
+-   Budget×Actor Interaction: A concave relationship—films with combined high budgets and star casts earn disproportionately more until a plateau.
+
+-   Release Year: Gradual decline for the most recent releases, possibly reflecting market saturation or pandemic effects.
+
+-   Takeaway: GAM captures nuanced, nonlinear effects that OLS and Elastic Net cannot. The partial plots guide data‑driven decisions—e.g., optimal budget ranges and year effects.4.5 Limitations & Potential Next Steps
+
+Heteroskedasticity
+
+-   Residuals fan out at higher fitted values. Next: Implement weighted least squares or use robust standard errors (HC3) in OLS.
+
+#### Summary and Next Steps
+
+Key Insights:
+
+-   Interpretability vs. Flexibility: OLS and Elastic Net yield straightforward coefficients, while GAM uncovers nonlinear patterns.
+
+-   Heteroskedasticity remains in all linear models; addressing it could reduce RMSE further.
+
+-   Outliers (blockbusters) drive error—targeted down‑weighting or robust loss functions may help.
+
+Next Steps
+
+-   Heteroskedasticity: Implement Weighted Least Squares or robust standard errors for OLS/Elastic Net.
+
+-   Outlier Management: Identify high‑leverage points via Cook’s distance and consider trimming or Winsorizing.
+
+-   GAM Tuning: Optimize spline degrees (number of knots) to further improve R-Squared.
+
+-   Interaction Terms: Explore additional interactions (e.g., trailer engagement × release month) in regularized models.
+
+Goal: Push Test RMSE below \$7M and Test R-Squared above 0.92
 
 ### Nonlinear Modeling
 
@@ -98,4 +228,4 @@ To further enhance website functionality, we also experimented with CSS styling 
 
 # Reference
 
- - Testing
+-   Testing
