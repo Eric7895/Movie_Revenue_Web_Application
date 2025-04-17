@@ -2,11 +2,16 @@
 title: "Movie Revenue Prediction"
 author: "Eric Wu, Matteo Martone"
 output: pdf_document
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{sectsty} \allsectionsfont{\centering}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
+\allsectionsfont{\raggedright}
 
 # Introduction
 
@@ -66,7 +71,17 @@ By incorporating these features, we greatly expanded our pool of predictors and 
 
 ### SQL Connection
 
+We successfully implemented a MySQL database, which allows our data to benefit from its Atomicity, Consistency, Isolation, and Durability (ACID) properties. These properties help ensure that each transaction is reliable, errors don’t leave the data in an inconsistent state, concurrent processes don’t conflict, and changes are permanently saved once committed.
+
+Beyond ACID, the database also improves performance and scalability. With a well-defined schema, data insertion follows strict rules, which helps maintain data integrity. We can easily export tables as CSV files for future use or offline analysis.
+
+The database also integrates well with the website: the upload function checks for duplicate records, and we’ve built API endpoints for deleting and updating data. This makes it easy to manage content in real time without compromising accuracy or stability.
+
 ### Website Navigation
+
+By having a database connection, we implemented website functionality using the FastAPI framework. The FastAPI Python module allows us to quickly set up a basic functioning website that supports Create, Read, Update, and Delete (CRUD) endpoints.
+
+To further enhance website functionality, we also experimented with CSS styling and JavaScript functions to toggle some of the API endpoints and other features, such as uploading new data and making predictions. We hope this will enhance the user experience with the prediction model.
 
 ### Tabelau Dashboard
 
@@ -77,3 +92,10 @@ By incorporating these features, we greatly expanded our pool of predictors and 
 ### Next Step
 
 # Conclusion
+
+\pagebreak
+\allsectionsfont{\centering}
+
+# Reference
+
+ - Testing
