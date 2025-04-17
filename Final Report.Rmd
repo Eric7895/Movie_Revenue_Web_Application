@@ -65,8 +65,6 @@ Intuition: High-profile talent often drives audience interest and marketing reac
 
 Objective: Create numerical features that capture both the presence of recognized industry figures (directors, writers) and the cumulative prominence of lead actors.
 
---potential visualization—
-
 ### Linear Modeling
 
 In this section we summarize the linear‑based approaches you have implemented, report their performance, examine diagnostic plots, and identify concrete next steps to push R-Squared above 0.92 and RMSE below \$7M.
