@@ -2,11 +2,16 @@
 title: "Movie Revenue Prediction"
 author: "Eric Wu"
 output: pdf_document
+header-includes:
+- \usepackage{booktabs}
+- \usepackage{sectsty} \allsectionsfont{\centering}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
+\allsectionsfont{\raggedright}
 
 # Introduction
 
@@ -87,3 +92,10 @@ To further enhance website functionality, we also experimented with CSS styling 
 ### Next Step
 
 # Conclusion
+
+\pagebreak
+\allsectionsfont{\centering}
+
+# Reference
+
+ - Testing
