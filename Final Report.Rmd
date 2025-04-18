@@ -29,7 +29,7 @@ In addition to building our predictive model, we plan to deploy it in a user-fri
 
 # Prior Work
 
-Research on movie revenue prediction has gained traction over the past decade, drawing from a wide range of machine learning and econometric methods. Much of the early work focused on linear regression and decision trees using metadata such as budget, genre, release date, and star power. For instance, Zhang et al. (2009) had a simplified approach using mainly decision trees to segment films into high- and low-performing categories. Their approach emphasized interpretability and offered producers a rule-based system for understanding which combinations of factors (e.g., genre, seasonality, sequel status) increased the likelihood of financial success. This paper also introduced methodology for computing monetary features into real dollar amounts using a Consumer Price Index translation. While effective for categorical classification, the model did not estimate continuous revenue values, and therefore produced unsatisfactory results(59.73% R^2)—highlighting a gap in regression-based modeling that our study seeks to address.
+Research on movie revenue prediction has gained traction over the past decade, drawing from a wide range of machine learning and econometric methods. Much of the early work focused on linear regression and decision trees using metadata such as budget, genre, release date, and star power. For instance, Zhang et al. (2009) had a simplified approach using mainly decision trees to segment films into high- and low-performing categories. Their approach emphasized interpretability and offered producers a rule-based system for understanding which combinations of factors (e.g., genre, seasonality, sequel status) increased the likelihood of financial success. This paper also introduced methodology for computing monetary features into real dollar amounts using a Consumer Price Index translation. While effective for categorical classification, the model did not estimate continuous revenue values, and therefore produced unsatisfactory results(59.73% R\^2)—highlighting a gap in regression-based modeling that our study seeks to address.
 
 Sharda and Delen (2006) provided foundational research for using data mining techniques to forecast box office success. Their comparative study evaluated decision trees, neural networks, and linear regression models, concluding that neural networks significantly outperformed traditional statistical methods, particularly in capturing the non-linear interactions among features such as budget, MPAA rating, release timing, and star score.
 
@@ -74,12 +74,13 @@ Intuition: High-profile talent often drives audience interest and marketing reac
 Objective: Create numerical features that capture both the presence of recognized industry figures (directors, writers) and the cumulative prominence of lead actors.
 
 ## Modeling Approaches
+
 ### Linear Modeling
-We employed several linear modeling techniques:
--   **Ordinary Least Squares (OLS)**: Baseline linear modeling for interpretability.
--   **Elastic Net Regression**: Combination of L1 and L2 regularization, effectively handling multicollinearity.
+
+We employed several linear modeling techniques: - **Ordinary Least Squares (OLS)**: Baseline linear modeling for interpretability. - **Elastic Net Regression**: Combination of L1 and L2 regularization, effectively handling multicollinearity.
 
 ### Nonlinear Models
+
 Advanced nonlinear techniques included:
 
 -   **Generalized Additive Models (GAM)**: Extended linear modeling using spline functions for capturing nonlinear effects.
@@ -96,37 +97,21 @@ Partial Dependence:
 
 -   Release Year: Gradual decline for the most recent releases, possibly reflecting market saturation or pandemic effects.
 
--   Takeaway: GAM captures nuanced, nonlinear effects that OLS and Elastic Net cannot. The partial plots guide data‑driven decisions—e.g., optimal budget ranges and year effects.4.5 Limitations & Potential Next Steps
+Takeaway:
 
-Heteroskedasticity
+GAM captures nuanced, nonlinear effects that OLS and Elastic Net cannot. The partial plots guide data‑driven decisions—e.g., optimal budget ranges and year effects.
 
--   Residuals fan out at higher fitted values. Next: Implement weighted least squares or use robust standard errors (HC3) in OLS.
+\
+Heteroskedasticity:
 
-#### Summary and Next Steps
-
-Key Insights:
-
--   Interpretability vs. Flexibility: OLS and Elastic Net yield straightforward coefficients, while GAM uncovers nonlinear patterns.
-
--   Heteroskedasticity remains in all linear models; addressing it could reduce RMSE further.
-
--   Outliers (blockbusters) drive error—targeted down‑weighting or robust loss functions may help.
-
-Next Steps
-
--   Heteroskedasticity: Implement Weighted Least Squares or robust standard errors for OLS/Elastic Net.
-
--   Outlier Management: Identify high‑leverage points via Cook’s distance and consider trimming or Winsorizing.
-
--   GAM Tuning: Optimize spline degrees (number of knots) to further improve R-Squared.
-
--   Interaction Terms: Explore additional interactions (e.g., trailer engagement × release month) in regularized models.
-
+Residuals fan out at higher fitted values. Next: Implement weighted least squares or use robust standard errors (HC3) in OLS.
 
 # Result
+
 In this section, we summarize the implemented modeling approaches, their performance outcomes, diagnostic evaluations, and clear next steps for further enhancement.
 
 ## Linear Modeling Results
+
 ### Ordinary Least Squares (OLS) Regression
 
 Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prized for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
@@ -149,8 +134,7 @@ Cross-validated RMSE: 19.43 Millions Cross-validated R-Squared: 0.79
 
 RMSE: 9.01 Million R-Squared: 0.86
 
-Diagnostic:
-Residuals vs Fitted shows clear heteroskedasticity (variance increases with fitted revenue).
+Diagnostic: Residuals vs Fitted shows clear heteroskedasticity (variance increases with fitted revenue).
 
 Q‑Q plot exhibits heavy right tail—extreme overestimation for blockbusters.
 
@@ -159,6 +143,7 @@ Histogram of residuals is sharply peaked with heavy tails.
 No formal outlier removal or robust weighting was applied.
 
 ### Elastic Net Regression
+
 -   **RMSE**: 10.07 Million
 -   **R-Squared**: 0.82
 
@@ -168,9 +153,10 @@ No formal outlier removal or robust weighting was applied.
 
 Elastic Net balanced accuracy and interpretability effectively amidst moderate multicollinearity.
 
-
 ## Non-Linear Modeling Results
+
 ### Generalized Additive Model (GAM)
+
 -   **RMSE**: 9.66 Million
 -   **R-Squared**: 0.84
 
@@ -184,6 +170,7 @@ Elastic Net balanced accuracy and interpretability effectively amidst moderate m
 GAM identified nuanced nonlinear patterns, highlighting complex interactions and effects unseen in OLS and Elastic Net.
 
 ### Random Forest Regressor
+
 -   **RMSE**: 9.64 Million
 -   **R-Squared**: 0.84
 
@@ -194,17 +181,17 @@ GAM identified nuanced nonlinear patterns, highlighting complex interactions and
 -   Feature importance analysis strongly highlights PCA-derived trailer metrics as crucial predictors.
 
 ### XGBoost with Time-based Data Split
+
 -   **RMSE**: 9.69 Million
 -   **R-Squared**: 0.8475
 
 #### Strengths:
-Realistic time-based training/testing split simulates practical forecasting scenarios effectively.
-Demonstrated strong generalization with minimal data leakage risk.
 
-####Limitations:
+Realistic time-based training/testing split simulates practical forecasting scenarios effectively. Demonstrated strong generalization with minimal data leakage risk.
+
+#### Limitations:
+
 Computational constraints limited hyperparameter tuning and feature optimization. Significant performance improvements remain achievable with expanded computing resources.
-
-
 
 ### SQL Connection
 
@@ -226,7 +213,25 @@ To further enhance website functionality, we also experimented with CSS styling 
 
 ### Challenges and Limitation
 
-### Next Step
+#### Summary and Next Steps
+
+Key Insights:
+
+-   Interpretability vs. Flexibility: OLS and Elastic Net yield straightforward coefficients, while GAM uncovers nonlinear patterns.
+
+-   Heteroskedasticity remains in all linear models; addressing it could reduce RMSE further.
+
+-   Outliers (blockbusters) drive error—targeted down‑weighting or robust loss functions may help.
+
+Next Steps
+
+-   Heteroskedasticity: Implement Weighted Least Squares or robust standard errors for OLS/Elastic Net.
+
+-   Outlier Management: Identify high‑leverage points via Cook’s distance and consider trimming or Winsorizing.
+
+-   GAM Tuning: Optimize spline degrees (number of knots) to further improve R-Squared.
+
+-   Interaction Terms: Explore additional interactions (e.g., trailer engagement × release month) in regularized models.
 
 # Conclusion
 
@@ -235,6 +240,4 @@ To further enhance website functionality, we also experimented with CSS styling 
 
 # Reference
 
-- https://developer.imdb.com/non-commercial-datasets/
-
-
+-   <https://developer.imdb.com/non-commercial-datasets/>
