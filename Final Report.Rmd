@@ -33,7 +33,7 @@ In addition to building our predictive model, we plan to deploy it in a user-fri
 
 ### Data Collection and Feature Engineering
 
-Starting with data collection, our group chose to use the official IMDB non-commercial datasets available at <https://developer.imdb.com/non-commercial-datasets/>. This source is updated daily and is highly compatible with scraping tools. From these official datasets, we obtained many primary attributes such as title, directors, writers, actors, IMDB rating, number of votes, release date, runtime, and genres.
+Starting with data collection, our group chose to use the official IMDB non-commercial datasets. This source is updated daily and is highly compatible with scraping tools. From these official datasets, we obtained many primary attributes such as title, directors, writers, actors, IMDB rating, number of votes, release date, runtime, and genres.
 
 In addition to the IMDB dataset, we also found a secondary dataset on GitHub that includes supplementary variables such as trailer views, trailer likes, revenue, budget, keywords, and more. By incorporating this dataset, we avoided the ongoing hassle of sourcing box office data manually. However, since this dataset is static, we lose the ability to refresh it using scraper tools. To implement a complete Extract, Transform, Load (ETL) pipeline, we would need to identify a legal and up-to-date source for scraping box office numbers and use the YouTube API—combined with natural language processing (NLP) techniques—to extract trailer-related metrics such as views and likes.
 
@@ -67,38 +67,7 @@ Objective: Create numerical features that capture both the presence of recognize
 
 ### Linear Modeling
 
-In this section we summarize the linear‑based approaches you have implemented, report their performance, examine diagnostic plots, and identify concrete next steps to push R-Squared above 0.92 and RMSE below $7M.
 
-#### Ordinary Least Squares (OLS) Regression
-
-Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prized for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
-
--   Linearity between features and target
-
--   Homoskedasticity (constant variance of residuals)
-
--   Normality of residuals
-
--   No multicollinearity among predictors
-
-Violations (e.g., heteroskedasticity, collinearity) can lead to biased estimates or inflated variances.
-
-Target: Log‐transformed revenue, back‐transformed for RMSE/R-Squared computation
-
-Validation: 5‑fold KFold (chronological, no shuffle), then hold‑out test on the newest 20% of films
-
-Cross-validaddted RMSE: 19.43 Millions Cross-validated R-Squared: 0.79
-
-RMSE: 9.01 Million R-Squared: 0.86
-
-Diagnostic:
-Residuals vs Fitted shows clear heteroskedasticity (variance increases with fitted revenue).
-
-Q‑Q plot exhibits heavy right tail—extreme overestimation for blockbusters.
-
-Histogram of residuals is sharply peaked with heavy tails.
-
-No formal outlier removal or robust weighting was applied.
 
 #### Elastic Net Regression
 
@@ -174,6 +143,39 @@ Goal: Push Test RMSE below $7M and Test R-Squared above 0.92
 
 ### Model Result
 
+In this section we summarize the the important approaches that have been implemented, report their performance, examine diagnostic plots, and identify concrete next steps to push R-Squared above 0.92 and RMSE below $7M.
+
+#### Ordinary Least Squares (OLS) Regression
+
+Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prized for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
+
+-   Linearity between features and target
+
+-   Homoskedasticity (constant variance of residuals)
+
+-   Normality of residuals
+
+-   No multicollinearity among predictors
+
+Violations (e.g., heteroskedasticity, collinearity) can lead to biased estimates or inflated variances.
+
+Target: Log‐transformed revenue, back‐transformed for RMSE/R-Squared computation
+
+Validation: 5‑fold KFold (chronological, no shuffle), using timeseriessplit().
+
+Cross-validated RMSE: 19.43 Millions Cross-validated R-Squared: 0.79
+
+RMSE: 9.01 Million R-Squared: 0.86
+
+Diagnostic:
+Residuals vs Fitted shows clear heteroskedasticity (variance increases with fitted revenue).
+
+Q‑Q plot exhibits heavy right tail—extreme overestimation for blockbusters.
+
+Histogram of residuals is sharply peaked with heavy tails.
+
+No formal outlier removal or robust weighting was applied.
+
 ### SQL Connection
 
 We successfully implemented a MySQL database, which allows our data to benefit from its Atomicity, Consistency, Isolation, and Durability (ACID) properties. These properties help ensure that each transaction is reliable, errors don’t leave the data in an inconsistent state, concurrent processes don’t conflict, and changes are permanently saved once committed.
@@ -203,6 +205,6 @@ To further enhance website functionality, we also experimented with CSS styling 
 
 # Reference
 
--   Testing
+- https://developer.imdb.com/non-commercial-datasets/
 
 
