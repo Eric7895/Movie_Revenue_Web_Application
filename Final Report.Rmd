@@ -1,6 +1,6 @@
 ---
 title: "Movie Revenue Prediction"
-author: "Eric Wu, Matteo Martone"
+author: "Eric Wu, Matteo Martone, Jeremy Long, Zheng Dong"
 output: pdf_document
 header-includes:
 - \usepackage{booktabs}
@@ -28,6 +28,11 @@ Our goal is to develop a robust, data-driven model that predicts revenue over a 
 In addition to building our predictive model, we plan to deploy it in a user-friendly manner. To do so, we will set up a SQL database connection to support our FASTAPI application, design the frontend using CSS, HTML, and JavaScript, and deploy the predictive model as an interactive web feature.
 
 # Prior Work
+  Research on movie revenue prediction has gained traction over the past decade, drawing from a wide range of machine learning and econometric methods. Much of the early work focused on linear regression and decision trees using metadata such as budget, genre, release date, and star power. For instance, Zhang et al. (2009) had a simplified approach using mainly decision trees to segment films into high- and low-performing categories. Their approach emphasized interpretability and offered producers a rule-based system for understanding which combinations of factors (e.g., genre, seasonality, sequel status) increased the likelihood of financial success. While effective for categorical classification, the model did not estimate continuous revenue values—highlighting a gap in regression-based modeling that our study seeks to address.
+	Sharda and Delen (2006) provided foundational research for using data mining techniques to forecast box office success. Their comparative study evaluated decision trees, neural networks, and linear regression models, concluding that neural networks significantly outperformed traditional statistical methods, particularly in capturing the non-linear interactions among features such as budget, MPAA rating, release timing, and star score.
+  We wanted to build on this foundation to build a project that combines the most successful elements of these other projects to create an optimal solution that would lead to better results. Importantly, it also includes actor and director scoring mechanisms based on historical box office performance, introducing domain-specific enhancements to the feature set. These design choices informed our own approach, particularly in how we engineered similar role-based features to reflect past project success and career consistency, such as star score.
+  Our approach emphasized robust feature engineering (e.g., primary writer/director extraction, trailer engagement metrics), regularization techniques to address multicollinearity, and cross-validation to benchmark competing models. By extending these methodologies with improved runtime-budget interactions and leveraging more granular genre encoding, we aimed to close gaps in past approaches and improve generalizability to upcoming releases.
+
 
 # Method
 
@@ -66,7 +71,9 @@ Intuition: High-profile talent often drives audience interest and marketing reac
 Objective: Create numerical features that capture both the presence of recognized industry figures (directors, writers) and the cumulative prominence of lead actors.
 
 ### Linear Modeling
+  We employed multiple linear regression to quantify the relationship between movie attributes and box office revenue. The model included both continuous predictors—such as budget, runtime, and trailer views—and categorical variables such as genre, title type, and original language, which were one-hot encoded. To mitigate skewness in the target variable, revenue was log-transformed, improving the model's ability to capture relative differences in performance across a wide revenue range.
 
+  An ANOVA analysis allows us to assess the significance of categorical predictors, identifying that genre and title type contributed meaningfully to model variance. Interaction terms were selectively introduced, particularly between budget and title type, to capture differing return-on-investment profiles across movie formats. Regularization techniques such as Ridge and LASSO regression were also tested to manage multicollinearity and reduce overfitting, with Ridge yielding a modest improvement in predictive performance.
 
 
 #### Elastic Net Regression
