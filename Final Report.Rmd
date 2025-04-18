@@ -74,40 +74,18 @@ Intuition: High-profile talent often drives audience interest and marketing reac
 
 Objective: Create numerical features that capture both the presence of recognized industry figures (directors, writers) and the cumulative prominence of lead actors.
 
+## Modeling Approaches
 ### Linear Modeling
+We employed several linear modeling techniques:
+-   **Ordinary Least Squares (OLS)**: Baseline linear modeling for interpretability.
+-   **Elastic Net Regression**: Combination of L1 and L2 regularization, effectively handling multicollinearity.
 
-We employed multiple linear regression to quantify the relationship between movie attributes and box office revenue. The model included both continuous predictors—such as budget, runtime, and trailer views—and categorical variables such as genre, title type, and original language, which were one-hot encoded. To mitigate skewness in the target variable, revenue was log-transformed, improving the model's ability to capture relative differences in performance across a wide revenue range.
+### Nonlinear Models
+Advanced nonlinear techniques included:
 
-An ANOVA analysis allows us to assess the significance of categorical predictors, identifying that genre and title type contributed meaningfully to model variance. Interaction terms were selectively introduced, particularly between budget and title type, to capture differing return-on-investment profiles across movie formats. Regularization techniques such as Ridge and LASSO regression were also tested to manage multicollinearity and reduce overfitting, with Ridge yielding a modest improvement in predictive performance.
-
-
-#### Elastic Net Regression
-
-Elastic Net combines Lasso (L1) and Ridge (L2) penalties to control model complexity and handle multicollinearity. The L1 penalty can shrink some coefficients exactly to zero (feature selection), while L2 distributes shrinkage across correlated predictors. Elastic Net is well‑suited when predictors are correlated—unlike Lasso, which arbitrarily picks one, Elastic Net keeps groups of correlated features together.
-
-Results:
-
--   RMSE: 8.09 Millions
-
--   R-Squared: 0.89
-
-Regularization reduced overfitting slightly (RMSE 0.9M down, R-Squared 0.03 up).
-
-Coefficients remain interpretable; none were driven exactly to zero given high l1_ratio.
-
-Takeaway: Elastic Net improves predictive accuracy by reducing overfitting and stabilizing coefficient estimates in the presence of moderate collinearity (e.g., between marketing metrics). It balances interpretability (non‑zero coefficients) with regularization.
-
-#### Generalized Additive Model (GAM)
-
-Generalized Additive Models (GAMs) extend linear models by fitting smooth functions (splines) to each predictor, allowing for flexible, nonlinear relationships while maintaining an additive structure. Each term SJXJ estimated via penalized splines, and overall interpretability is preserved through partial dependency plots, which show how the target responds to each feature holding others constant.
-
-Performance
-
-Test RMSE = $7.33M (best overall)
-
-Test R-Squared = 0.91 (closest to stretch goal)
-
-MAE: 3.27 M
+-   **Generalized Additive Models (GAM)**: Extended linear modeling using spline functions for capturing nonlinear effects.
+-   **Random Forest Regressor**: Tree-based ensemble modeling to capture complex interactions and nonlinearities.
+-   **XGBoost**: Gradient boosting framework optimized with a realistic time-based data split, simulating practical forecasting scenarios.
 
 Partial Dependence:
 
@@ -145,19 +123,12 @@ Next Steps
 
 -   Interaction Terms: Explore additional interactions (e.g., trailer engagement × release month) in regularized models.
 
-Goal: Push Test RMSE below $7M and Test R-Squared above 0.92
-
-### Nonlinear Modeling
 
 # Result
+In this section, we summarize the implemented modeling approaches, their performance outcomes, diagnostic evaluations, and clear next steps for further enhancement.
 
-### Data
-
-### Model Result
-
-In this section we summarize the the important approaches that have been implemented, report their performance, examine diagnostic plots, and identify concrete next steps to push R-Squared above 0.92 and RMSE below $7M.
-
-#### Ordinary Least Squares (OLS) Regression
+## Linear Modeling Results
+### Ordinary Least Squares (OLS) Regression
 
 Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prized for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
 
@@ -187,6 +158,54 @@ Q‑Q plot exhibits heavy right tail—extreme overestimation for blockbusters.
 Histogram of residuals is sharply peaked with heavy tails.
 
 No formal outlier removal or robust weighting was applied.
+
+### Elastic Net Regression
+-   **RMSE**: 10.07 Million
+-   **R-Squared**: 0.82
+
+#### Insights:
+
+-   **Maintained interpretability**: no coefficients driven to exact zero due to moderate L1 ratio.
+
+Elastic Net balanced accuracy and interpretability effectively amidst moderate multicollinearity.
+
+
+## Non-Linear Modeling Results
+### Generalized Additive Model (GAM)
+-   **RMSE**: 9.66 Million
+-   **R-Squared**: 0.84
+
+#### Key Nonlinear Effects:
+
+-   **Trailer Likes (log)**: Linear positive impact; increased trailer engagement reliably raises revenue.
+-   **Budget (log)**: Exhibits diminishing returns at mid-range budgets, significant boost for blockbuster budgets.
+-   **Budget×Actor Interaction**: Concave shape; significant increases up to a plateau, indicating budget and star power synergy.
+-   **Release Year**: Gradual decline for recent years, possibly market saturation or pandemic influences.
+
+GAM identified nuanced nonlinear patterns, highlighting complex interactions and effects unseen in OLS and Elastic Net.
+
+### Random Forest Regressor
+-   **RMSE**: 9.64 Million
+-   **R-Squared**: 0.84
+
+#### Key Insights:
+
+-   Polynomial interactions and tuned hyperparameters improved capture of complex data relationships.
+
+-   Feature importance analysis strongly highlights PCA-derived trailer metrics as crucial predictors.
+
+### XGBoost with Time-based Data Split
+-   **RMSE**: 9.69 Million
+-   **R-Squared**: 0.8475
+
+#### Strengths:
+Realistic time-based training/testing split simulates practical forecasting scenarios effectively.
+Demonstrated strong generalization with minimal data leakage risk.
+
+####Limitations:
+Computational constraints limited hyperparameter tuning and feature optimization. Significant performance improvements remain achievable with expanded computing resources.
+
+
 
 ### SQL Connection
 
