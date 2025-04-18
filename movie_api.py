@@ -44,6 +44,11 @@ def get_db():
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/dashboard/", include_in_schema=False)
+async def dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
+
+
 @app.get("/movies_basic/")
 def get_movies_basic(db: Session = Depends(get_db)):
     '''
@@ -376,7 +381,6 @@ def delete_movie(title: str,
     return {"message": "Movie deleted successfully"}
 
 # Fixed vs code path error using "set PATH=%CONDA_PREFIX%\Scripts;%PATH%"
-# Run the app using "uvicorn movie_api:app --reload"
 # Kill the app using "taskkill /IM uvicorn.exe /F"
 # Checked registered API routes using "curl http://127.0.0.1:8000/openapi.json"
 
