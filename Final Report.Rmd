@@ -77,15 +77,19 @@ Objective: Create numerical features that capture both the presence of recognize
 
 ### Linear Modeling
 
-We employed several linear modeling techniques: - **Ordinary Least Squares (OLS)**: Baseline linear modeling for interpretability. - **Elastic Net Regression**: Combination of L1 and L2 regularization, effectively handling multicollinearity.
+We employed several linear modeling techniques:
+
+-   **Ordinary Least Squares (OLS)**: Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prized for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
+
+-    **Elastic Net Regression**: Combination of L1 and L2 regularization, effectively handling multicollinearity.
 
 ### Nonlinear Models
 
 Advanced nonlinear techniques included:
 
 -   **Generalized Additive Models (GAM)**: Extended linear modeling using spline functions for capturing nonlinear effects.
--   **Random Forest Regressor**: Tree-based ensemble modeling to capture complex interactions and nonlinearities.
--   **XGBoost**: Gradient boosting framework optimized with a realistic time-based data split, simulating practical forecasting scenarios.
+-   **Random Forest Regressor**: Random Forest constructs an ensemble of decision trees on bootstrapped samples, each using random subsets of features at splits. By averaging predictions across many trees, it reduces variance and prevents overfitting. Its non‑parametric nature allows it to automatically capture complex nonlinearities and interactions among predictors without explicit feature engineering. Moreover, it provides feature importance scores, helping identify the most influential variables.
+-   **XGBoost**: XGBoost (Extreme Gradient Boosting) builds trees sequentially, where each new tree corrects errors from the ensemble so far. It uses second‑order gradient information and built‑in regularization (L1 and L2) to enhance predictive power while mitigating overfitting. XGBoost is optimized for speed and can handle large datasets efficiently, making it a standard for structured data tasks requiring high accuracy.
 
 Partial Dependence:
 
@@ -114,25 +118,19 @@ In this section, we summarize the implemented modeling approaches, their perform
 
 ### Ordinary Least Squares (OLS) Regression
 
-Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prized for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
+-   **RMSE:** 9.01 Million
 
--   Linearity between features and target
+-   **R-Squared:** 0.86
 
--   Homoskedasticity (constant variance of residuals)
+-   **Cross-validated RMSE:** 19.43 Million
 
--   Normality of residuals
-
--   No multicollinearity among predictors
+-   **Cross-validated R-Squared:** 0.79
 
 Violations (e.g., heteroskedasticity, collinearity) can lead to biased estimates or inflated variances.
 
 Target: Log‐transformed revenue, back‐transformed for RMSE/R-Squared computation
 
 Validation: 5‑fold KFold (chronological, no shuffle), using timeseriessplit().
-
-Cross-validated RMSE: 19.43 Millions Cross-validated R-Squared: 0.79
-
-RMSE: 9.01 Million R-Squared: 0.86
 
 Diagnostic: Residuals vs Fitted shows clear heteroskedasticity (variance increases with fitted revenue).
 
@@ -149,9 +147,9 @@ No formal outlier removal or robust weighting was applied.
 
 #### Insights:
 
--   **Maintained interpretability**: no coefficients driven to exact zero due to moderate L1 ratio.
+-   Maintained interpretability: no coefficients driven to exact zero due to moderate L1 ratio.
 
-Elastic Net balanced accuracy and interpretability effectively amidst moderate multicollinearity.
+-   Elastic Net balanced accuracy and interpretability effectively amidst moderate multicollinearity.
 
 ## Non-Linear Modeling Results
 
@@ -211,11 +209,13 @@ To further enhance website functionality, we also experimented with CSS styling 
 
 # Discussion
 
+Across all methods—from OLS through GAM to Random Forest and XGBoost—we observed that increasing model flexibility yielded consistent gains in predictive accuracy. GAM achieved the highest R-squared (0.86) by capturing nuanced, nonlinear relationships (e.g., diminishing returns on mid‑range budgets, synergy between budget and star power).
+
 ### Challenges and Limitation
 
 #### Summary and Next Steps
 
-Key Insights:
+#### Key Insights:
 
 -   Interpretability vs. Flexibility: OLS and Elastic Net yield straightforward coefficients, while GAM uncovers nonlinear patterns.
 
@@ -223,17 +223,23 @@ Key Insights:
 
 -   Outliers (blockbusters) drive error—targeted down‑weighting or robust loss functions may help.
 
-Next Steps
+#### Next Steps
 
--   Heteroskedasticity: Implement Weighted Least Squares or robust standard errors for OLS/Elastic Net.
+-   Heteroskedasticity Correction: Implement Weighted Least Squares or robust standard errors in OLS/Elastic Net to stabilize error variance for blockbusters.
 
--   Outlier Management: Identify high‑leverage points via Cook’s distance and consider trimming or Winsorizing.
+    Outlier Management: Compute Cook’s distance to identify influential observations; apply Winsorization or conditional trimming to mitigate distortion.
 
--   GAM Tuning: Optimize spline degrees (number of knots) to further improve R-Squared.
+    GAM Optimization: Tune the number and placement of spline knots for each predictor to push R-squared beyond 0.86.
 
--   Interaction Terms: Explore additional interactions (e.g., trailer engagement × release month) in regularized models.
+    Enhanced Tree Tuning: Conduct an extensive RandomizedSearchCV on XGBoost parameters (n_estimators, max_depth, learning_rate, subsample) with increased computational resources.
+
+    Feature Expansion: Integrate social‑media sentiment and search‑trend data, as well as new interaction terms (e.g., trailer engagement × release month) into both linear and tree‑based models.
+
+    Robust Deployment: Finalize FastAPI endpoints and SQL integration for real‑time inference, and enhance the frontend to allow scenario testing and dynamic visualizations in the Tableau dashboard.
 
 # Conclusion
+
+We have demonstrated a comprehensive workflow—spanning data collection, feature engineering, and a suite of predictive models—that reliably forecasts movie revenues within an inflation‑adjusted, time‑ordered paradigm. By highlighting the critical role of digital engagement alongside traditional metadata, our work equips studios with actionable insights to optimize both creative and marketing investments for future releases.
 
 \pagebreak
 \allsectionsfont{\centering}
