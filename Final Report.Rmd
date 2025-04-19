@@ -118,9 +118,9 @@ In this section, we summarize the implemented modeling approaches, their perform
 
 ### Ordinary Least Squares (OLS) Regression
 
--   **RMSE:** 9.01 Million
+-   **RMSE:** 9.85 Million
 
--   **R-Squared:** 0.86
+-   **R-Squared:** 0.83
 
 -   **Cross-validated RMSE:** 19.43 Million
 
@@ -138,7 +138,6 @@ Q‑Q plot exhibits heavy right tail—extreme overestimation for blockbusters.
 
 Histogram of residuals is sharply peaked with heavy tails.
 
-No formal outlier removal or robust weighting was applied.
 
 ### Elastic Net Regression
 
@@ -170,7 +169,7 @@ GAM identified nuanced nonlinear patterns, highlighting complex interactions and
 ### Random Forest Regressor
 
 -   **RMSE**: 9.64 Million
--   **R-Squared**: 0.84
+-   **R-Squared**: 0.8371
 
 #### Key Insights:
 
@@ -180,12 +179,8 @@ GAM identified nuanced nonlinear patterns, highlighting complex interactions and
 
 ### XGBoost with Time-based Data Split
 
--   **RMSE**: 9.69 Million
--   **R-Squared**: 0.8475
-
-#### Strengths:
-
-Realistic time-based training/testing split simulates practical forecasting scenarios effectively. Demonstrated strong generalization with minimal data leakage risk.
+-   **RMSE**: 9.45 Million
+-   **R-Squared**: 0.8548
 
 #### Limitations:
 
@@ -212,6 +207,12 @@ To further enhance website functionality, we also experimented with CSS styling 
 Across all methods—from OLS through GAM to Random Forest and XGBoost—we observed that increasing model flexibility yielded consistent gains in predictive accuracy. GAM achieved the highest R-squared (0.86) by capturing nuanced, nonlinear relationships (e.g., diminishing returns on mid‑range budgets, synergy between budget and star power).
 
 ### Challenges and Limitation
+
+The main limitation in this project comes from the size and coverage of our secondary dataset. Although our primary IMDB dataset was large, most of our advanced features — such as trailer PCA components, star scores, and external metadata — were only available for a small subset of movies. This limited our final modeling dataset to a few thousand entries.
+
+Because of this, we were unable to reliably train deep learning models; while we attempted them, the results showed high variance across runs, with performance shifting dramatically. This instability made them unsuitable for deployment or evaluation.
+
+In addition, some of our engineered features (e.g., trailer embeddings via PCA, or our star scoring metric) rely on assumptions or incomplete data. In cases where trailers were missing or actor data was sparse, those features may have introduced noise rather than value.
 
 #### Summary and Next Steps
 
@@ -246,4 +247,4 @@ We have demonstrated a comprehensive workflow—spanning data collection, featur
 
 # Reference
 
--   <https://developer.imdb.com/non-commercial-datasets/>
+- IMDB. (2025). IMDb Non-Commercial Datasets. IMDB Developer. https://developer.imdb.com/non-commercial-datasets/
