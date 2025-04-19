@@ -50,11 +50,11 @@ End Project: To deliver a web application supporting CRUD operation from data so
 ### 3.a **Create a Reference Model for Benchmark** ✔️
 - Using only a handful of important variables (subjective) to create reference model for benchmark purpose. ✔️
 ### 3.b **Preprocess the Data (Create dependent variables)** ✔️
-### 4.a **Machine Learning Notebook**
+### 4.a **Machine Learning Notebook** ✔️
 - Create baseline models (Suggested black-box models like MLP) 
-### 4.b **Web API Application**
-### 4.c **Tableau Dashboard**
-### 5 **Final Integration**
+### 4.b **Web API Application** ✔️
+### 4.c **Tableau Dashboard** ✔️
+### 5 **Final Integration** 
 ---
 ## How to run the application
 1) Create a virutal environment for this application, and ran pip install requirements.txt to install all the dependencies.
