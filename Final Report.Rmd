@@ -5,6 +5,7 @@ output: pdf_document
 header-includes:
 - \usepackage{booktabs}
 - \usepackage{sectsty} \allsectionsfont{\centering}
+- \usepackage{float}
 ---
 
 ```{r setup, include=FALSE}
@@ -201,6 +202,15 @@ By having a database connection, we implemented website functionality using the 
 To further enhance website functionality, we also experimented with CSS styling and JavaScript functions to toggle some of the API endpoints and other features, such as uploading new data and making predictions. We hope this will enhance the user experience with the prediction model.
 
 ### Tabelau Dashboard
+
+```{r, fig.pos="H", echo=FALSE}
+knitr::include_graphics("dashboard.png")
+```
+
+We decide to create a Tableau Dashboard for exploratory data analysis purpose and here's some interesting findings:
+
+- Action and Adventure are the most popular (based on revenue) genres
+- Movies seem to perform the best when it's runtime is around 180
 
 # Discussion
 
