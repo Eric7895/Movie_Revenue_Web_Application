@@ -16,6 +16,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Introduction
 
+Github repository - https://github.com/Eric7895/Movie_Revenue_Web_Application
+
 ### Background
 
 The film industry faces big financial risks, with studios investing millions in production and marketing without a guarantee of success. High stakes and unpredictable market conditions mean that having a reliable way of predicting movie revenues is crucial. When factors like changing viewer tastes and economic challenges come into play, older methods often fail to capture the ever-changing nature of the industry, which can lead to expensive mistakes.
