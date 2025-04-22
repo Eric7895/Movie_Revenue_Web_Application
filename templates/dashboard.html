@@ -1,4 +1,41 @@
-<div class='tableau-container'>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf‑8" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    html,body{
+      height:100%;
+      margin:0;
+    }
+
+    body{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#f9f9f9;
+    }
+
+    .tableau-container{
+      width:90vw;
+      max-width:1400px;
+      min-width:620px;
+    }
+
+    .tableau-container,
+    .tableauPlaceholder{
+      width:100%;
+    }
+
+    .tableau-container .tableauViz{
+      max-height:80vh !important;
+      width:100%    !important;
+  }
+  </style>
+</head>
+<body>
+  <div class='tableau-container'>
     <div class='tableauPlaceholder' id='viz1745004954232' style='position: relative'>
     <noscript>
       <a href='#'>
@@ -22,33 +59,32 @@
       <param name='display_count' value='yes' />
       <param name='language' value='en-US' />
     </object>
-  </div>                
-  
-  <script type='text/javascript'>
-    var divElement = document.getElementById('viz1745004954232');
-    var vizElement = divElement.getElementsByTagName('object')[0];
-    if (divElement.offsetWidth > 800) {
-        vizElement.style.width = '100%';
-        vizElement.style.height = '100%';
-      vizElement.style.width='100%';
-      vizElement.style.minHeight='800px';
-      vizElement.style.maxHeight='1200px';
-      vizElement.style.height=(divElement.offsetWidth*0.7)+'px';
-    }
-      else if (divElement.offsetWidth > 500) {
-      vizElement.style.minWidth='620px';
-      vizElement.style.maxWidth='1450px';
-      vizElement.style.width='100%';
-      vizElement.style.minHeight='687px';
-      vizElement.style.maxHeight='887px';
-      vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
-    } else {
-      vizElement.style.width='100%';
-      vizElement.style.height='1577px';
-    }
-    var scriptElement = document.createElement('script');
-    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
-    vizElement.parentNode.insertBefore(scriptElement, vizElement);
-  </script>
-  
   </div>
+</body>
+<script type='text/javascript'>
+  var divElement = document.getElementById('viz1745004954232');
+  var vizElement = divElement.getElementsByTagName('object')[0];
+  if (divElement.offsetWidth > 800) {
+      vizElement.style.width = '100%';
+      vizElement.style.height = '100%';
+    vizElement.style.width='100%';
+    vizElement.style.minHeight='800px';
+    vizElement.style.maxHeight='1200px';
+    vizElement.style.height=(divElement.offsetWidth*0.7)+'px';
+  }
+    else if (divElement.offsetWidth > 500) {
+    vizElement.style.minWidth='620px';
+    vizElement.style.maxWidth='1450px';
+    vizElement.style.width='100%';
+    vizElement.style.minHeight='687px';
+    vizElement.style.maxHeight='887px';
+    vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+  } else {
+    vizElement.style.width='100%';
+    vizElement.style.height='1577px';
+  }
+  var scriptElement = document.createElement('script');
+  scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+  vizElement.parentNode.insertBefore(scriptElement, vizElement);
+</script>
+</html>
