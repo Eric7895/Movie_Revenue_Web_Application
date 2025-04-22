@@ -138,7 +138,7 @@ def scraper(year: int) -> None:
     Main scraping function: retrieves actor data and saves HTML pages.
     '''
 
-    filename = r"actor scraper/scraped_data.pkl"
+    filename = r"actor data/scraped_data.pkl"
     scraped_data = load_requested_data(filename)
 
     if not scraped_data:
@@ -152,9 +152,9 @@ def parser(year: int) -> None:
     '''
     Parse HTML content and store extracted actor data.
     '''
-    filename = r"actor scraper/scraped_data.pkl"
+    filename = r"actor data/scraped_data.pkl"
     scraped_data = load_requested_data(filename)
-    actor_path = f"actor scraper/actor_{year}.csv"
+    actor_path = f"actor data/actor_{year}.csv"
 
     df = []
     existing_names = set()

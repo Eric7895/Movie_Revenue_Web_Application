@@ -5,6 +5,11 @@ from sklearn.decomposition import PCA
 import cpi 
 import os
 from scraper.actor_bill_board_scraper import actor_scraper
+from sqlalchemy.orm import sessionmaker
+from models import Movies, Base
+from db import get_engine
+from populate_data import main_merge
+cpi.update()
 
 # ==============================
 #           HELPERS
@@ -17,7 +22,10 @@ def CPI_adjustment(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()  # Avoid modifying the original DataFrame
     
     # Extract the year from release_date
-    df['year'] = df['release_date'].str.split('-').str[0].astype(int)
+    if df['release_date'].dtype == 'O':  # 'O' = object, probably string
+        df['year'] = pd.to_datetime(df['release_date'], errors='coerce').dt.year
+    else:
+        df['year'] = df['release_date'].dt.year
     
     # Apply CPI adjustment
     df['budget'] = df.apply(lambda row: cpi.inflate(row['budget'], row['year']), axis=1)
@@ -71,7 +79,6 @@ def encoding_people(df: pd.DataFrame, name_list: list, actor_df: pd.DataFrame, c
             
     return pd.DataFrame(output_df).drop_duplicates(['name'])
 
-
 def encoding_genre(df: pd.DataFrame) -> pd.DataFrame:
     '''
     This function helps to encode genre information based on the first genre information (Probably primary genre)
@@ -97,7 +104,8 @@ def encoding_holiday_competitive(df: pd.DataFrame) -> pd.DataFrame:
     - is_competitive_month: 1 if released in a high-revenue month, else 0
     """
     # Ensure release_date is in datetime format
-    df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
+    if df['release_date'].dtype == 'O':  # 'O' = object, probably string
+        df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
 
     # Define major holidays (approximate release windows)
     holiday_dates = {
@@ -255,15 +263,21 @@ def encode_keyword(df: pd.DataFrame, verbose: bool = False) -> pd.DataFrame:
 # ==============================
 
 def main(verbose=False, year: int = 2025):
-    path1 = 'data/movie_data.csv'
-    path2 = 'raw data/the_most_popular_director_imdb.csv'
+    engine = get_engine()
+
+    query = "SELECT * FROM movie"
+    movie_stg0 = pd.read_sql(query, engine)
+    print(f"Initialized stg0: shape - {movie_stg0.shape[0], movie_stg0.shape[1]}")
+    print(type(movie_stg0))
+
+    path = 'raw data/the_most_popular_director_imdb.csv'
 
     year_list = [year - i for i in range(5)]
 
     actor_list = []
 
     for year in year_list:
-        actor_list.append((f'actor scraper/actor_{year}.csv', year))
+        actor_list.append((f'actor data/actor_{year}.csv', year))
 
     for table, year in actor_list:
         if not os.path.exists(table):
@@ -275,9 +289,8 @@ def main(verbose=False, year: int = 2025):
     actor4 = pd.read_csv(actor_list[3][0])
     actor5 = pd.read_csv(actor_list[4][0])
 
-    director_writer_names = list(pd.read_csv(path2)['Name'].drop_duplicates())
+    director_writer_names = list(pd.read_csv(path)['Name'].drop_duplicates())
     actors = pd.concat([actor1, actor2, actor3, actor4, actor5], ignore_index=True)
-    movie_stg0 = pd.read_csv(path1)
 
     # Movie_stg0 has the following column and index
     # Index 0: primaryTitle
@@ -338,6 +351,9 @@ def main(verbose=False, year: int = 2025):
     # Return final DataFrame
     return movie_stg3
 
-if __name__ == '__main__':
+def features_encoding():
     final_df = main(verbose=True)
     final_df.to_csv('data/movie_data_encoded.csv')
+
+if __name__ == '__main__':
+    features_encoding()
