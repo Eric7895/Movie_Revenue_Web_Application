@@ -7,6 +7,8 @@ from models import Movies, Base
 from db import get_engine
 from urllib.parse import unquote
 import pandas as pd
+import math       
+import pandas as pd
 
 import uvicorn
 
@@ -239,19 +241,20 @@ def upload_movies(file: UploadFile = File(...), db: Session = Depends(get_db)):
         
         record_added = 0
         skipped = 0
+
         for _, row in df.iterrows():
-            movie_data = row.to_dict()
-            
-            exists = db.query(Movies).filter(
-                Movies.primaryTitle == movie_data['primaryTitle']
-            ).first()
-            
-            if exists:
+            # convert each value: if it’s NA-like → None, else leave it
+            movie_data = {
+                k: (None if pd.isna(v) or (isinstance(v, float) and math.isnan(v)) else v)
+                for k, v in row.items()
+            }
+
+            if db.query(Movies).filter(
+                Movies.primaryTitle == movie_data["primaryTitle"]).first():
                 skipped += 1
                 continue
-            
-            movie = Movies(**movie_data)
-            db.add(movie)
+
+            db.add(Movies(**movie_data))
             record_added += 1
         
         db.commit()

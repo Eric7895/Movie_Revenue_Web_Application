@@ -262,14 +262,7 @@ def encode_keyword(df: pd.DataFrame, verbose: bool = False) -> pd.DataFrame:
 #           Main
 # ==============================
 
-def main(verbose=False, year: int = 2025):
-    engine = get_engine()
-
-    query = "SELECT * FROM movie"
-    movie_stg0 = pd.read_sql(query, engine)
-    print(f"Initialized stg0: shape - {movie_stg0.shape[0], movie_stg0.shape[1]}")
-    print(type(movie_stg0))
-
+def main(movie_stg0: pd.DataFrame, verbose=False, year: int = 2025):
     path = 'raw data/the_most_popular_director_imdb.csv'
 
     year_list = [year - i for i in range(5)]
@@ -351,9 +344,12 @@ def main(verbose=False, year: int = 2025):
     # Return final DataFrame
     return movie_stg3
 
-def features_encoding():
-    final_df = main(verbose=True)
-    final_df.to_csv('data/movie_data_encoded.csv')
-
 if __name__ == '__main__':
-    features_encoding()
+    engine = get_engine()
+
+    query = "SELECT * FROM movie"
+    movie_stg0 = pd.read_sql(query, engine)
+    print(f"Initialized stg0: shape - {movie_stg0.shape[0], movie_stg0.shape[1]}")
+
+    final_df = main(movie_stg0=movie_stg0, verbose=True)
+    final_df.to_csv('data/movie_data_encoded.csv')
