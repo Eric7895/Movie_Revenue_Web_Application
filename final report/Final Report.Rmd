@@ -261,3 +261,4 @@ We have demonstrated a comprehensive workflow—spanning data collection, featur
 
 - IMDB. (2025). IMDb Non-Commercial Datasets. IMDB Developer. https://developer.imdb.com/non-commercial-datasets/
 - Sharma, A. S., Roy, T., Rifat, S. A., & Mridul, M. A. (2021). Presenting a larger up-to-date movie dataset and investigating the effects of pre-released attributes on gross revenue. Journal of Computer Science, 17(10), 870–888. https://doi.org/10.3844/jcssp.2021.870.888
+- Zhang, Y., Luo, X., & Yang, Y. (2009). Predicting movie success with machine learning techniques. International Journal of Computer Applications, 1(1), 1–6.​
