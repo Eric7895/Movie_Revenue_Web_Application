@@ -50,6 +50,9 @@ async def home(request: Request):
 async def dashboard(request: Request):
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
+@app.get("/notebook/", include_in_schema=False)
+async def notebook(request: Request):
+    return templates.TemplateResponse("notebook.html", {"request": request})
 
 @app.get("/movies_basic/")
 def get_movies_basic(db: Session = Depends(get_db)):
