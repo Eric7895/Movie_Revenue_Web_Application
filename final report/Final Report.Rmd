@@ -216,15 +216,15 @@ In addition, some of our engineered features (e.g., trailer embeddings via PCA, 
 
 -   Heteroskedasticity Correction: Implement Weighted Least Squares or robust standard errors in OLS/Elastic Net to stabilize error variance for blockbusters.
 
-    Outlier Management: Compute Cook’s distance to identify influential observations; apply Winsorization or conditional trimming to mitigate distortion.
+-   Outlier Management: Compute Cook’s distance to identify influential observations; apply Winsorization or conditional trimming to mitigate distortion.
 
-    GAM Optimization: Tune the number and placement of spline knots for each predictor to push R-squared beyond 0.86.
+-   GAM Optimization: Tune the number and placement of spline knots for each predictor to push R-squared beyond 0.86.
 
-    Enhanced Tree Tuning: Conduct an extensive RandomizedSearchCV on XGBoost parameters (n_estimators, max_depth, learning_rate, subsample) with increased computational resources.
+-   Enhanced Tree Tuning: Conduct an extensive RandomizedSearchCV on XGBoost parameters (n_estimators, max_depth, learning_rate, subsample) with increased computational resources.
 
-    Feature Expansion: Integrate social‑media sentiment and search‑trend data, as well as new interaction terms (e.g., trailer engagement × release month) into both linear and tree‑based models.
+-   Feature Expansion: Integrate social‑media sentiment and search‑trend data, as well as new interaction terms (e.g., trailer engagement × release month) into both linear and tree‑based models.
 
-    Robust Deployment: Finalize FastAPI endpoints and SQL integration for real‑time inference, and enhance the frontend to allow scenario testing and dynamic visualizations in the Tableau dashboard.
+-   Robust Deployment: Finalize FastAPI endpoints and SQL integration for real‑time inference, and enhance the frontend to allow scenario testing and dynamic visualizations in the Tableau dashboard.
 
 # Conclusion
 
