@@ -12,6 +12,15 @@ header-includes:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+```{r import}
+#| message = FALSE,
+#| warning = FALSE
+
+library(tidyverse)
+library(kableExtra)
+library(dplyr)
+```
+
 \allsectionsfont{\raggedright}
 
 # Introduction
@@ -48,9 +57,9 @@ Starting with data collection, our group chose to use the official IMDB non-comm
 
 In addition to the IMDB dataset, we also found a secondary dataset on GitHub that includes supplementary variables such as trailer views, trailer likes, revenue, budget, keywords, and more. By incorporating this dataset, we avoided the ongoing hassle of sourcing box office data manually. However, since this dataset is static, we lose the ability to refresh it using scraper tools. To implement a complete Extract, Transform, Load (ETL) pipeline, we would need to identify a legal and up-to-date source for scraping box office numbers and use the YouTube API—combined with natural language processing (NLP) techniques—to extract trailer-related metrics such as views and likes.
 
-Additionally, we attempted to scrape actor, director, and writer "billboards" for feature engineering purposes. We ensured that the sources used were recently updated and broadly representative. For directors and writers, we used an IMDb list created by a user, which was most recently updated on April 15, 2025, and has received 98,000 views. For actors, we used The Numbers billboard to collect actor information and corresponding star scores. We acknowledge that these billboards—especially those created by users—may contain biases, and addressing this bias is a potential area for future improvement.
+Additionally, we attempted to scrape actor, director, and writer "billboards" for feature engineering purposes. We ensured that the sources used were recently updated and broadly representative. For directors and writers, we used an IMDb list created by user “ur1612690”^[https://www.imdb.com/list/ls026411399], which was most recently updated on April 15, 2025, and has received 98,000 views. For actors, we used The Numbers billboard^[Launched by Bruce Nash on October 17th, 1997, now became one of the largest freely-available database of movie business information on the Web] to collect actor information and corresponding star scores. We acknowledge that these billboards—especially those created by users—may contain biases, and addressing this bias is a potential area for future improvement.
 
-Moving on to data processing, we removed all movies with null values and still retained a relatively sufficient number of records for model training. We also eliminated duplicate entries by using a composite primary key consisting of the movie title and release date. After cleaning the data, we began feature engineering. Our encoding approaches for each categorical variable are as follows:
+Moving on to data processing, we removed all movies with null values and still retained a relatively sufficient number of records for model training. We also eliminated duplicate entries by using a composite identifier of movie title and release date. After cleaning the data, we began feature engineering. Our encoding approaches for each categorical variable are as follows:
 
 -   **Director and Writer**: We counted the total number of famous directors and writers associated with each movie, based on their appearance in our billboard lists.
 
@@ -58,23 +67,17 @@ Moving on to data processing, we removed all movies with null values and still r
 
 -   **Genre**: Since the genre field contains comma-separated strings, we extracted only the primary genre (i.e., the first listed) and created dummy variables based on these values.
 
--   **Release Date**: We created two binary variables—is_holiday_release and is_competitive_month. The holiday variable flags releases near major holidays (e.g., Christmas, Thanksgiving, Halloween, Independence Day, Memorial Day, Labor Day, Valentine’s Day, and Chinese New Year), while the competitive month variable flags historically high-grossing periods (May, June, July, November, and December).
+-   **Release Date**: We created two binary variables—is_holiday_release and is_competitive_month. The holiday variable flags releases near major holidays, while the competitive month variable flags historically high-grossing periods (May, June, July, November, and December).
 
--   **Production Companies**: We created a binary variable, production_popular, to indicate whether a movie was produced by a major company. Our list includes: Warner Bros, Universal Pictures, Walt Disney, Columbia Pictures, 20th Century Fox, Paramount, Marvel Studios, New Line, DreamWorks, Lionsgate, MGM, Sony Pictures, Lucasfilm, Pixar, Legendary, A24, Focus Features, Amblin, Working Title, StudioCanal, and Castle Rock. In the future, we may use string similarity measures (e.g., cosine similarity) to better capture variations in company names.
+-   **Production Companies**: We created a binary variable, production_popular, to indicate whether a movie was produced by a major company. Our list includes: Warner Bros, Universal Pictures, Walt Disney, Columbia Pictures, 20th Century Fox, etc. In the future, we may use string similarity measures (e.g., cosine similarity) to better capture variations in company names.
 
 -   **Languages**: We selected the top five most common languages and created dummy variables for each. All other languages were grouped into an “Other Languages” category. In the future, we may consider combining these into a single variable to reduce multicollinearity.
 
--   **Keywords**: We used the pretrained BERT model 'all-mpnet-base-v2' to embed each keyword into high-dimensional vectors. We then applied Principal Component Analysis (PCA) to reduce the dimensionality, selecting the first principal component. We ensured that the first eigenvalue explained at least 40% of the variance. Using a model like BERT helps preserve the semantic meaning of keywords.
+-   **Keywords**: We used the pretrained BERT^[BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding] model 'all-mpnet-base-v2'^[https://huggingface.co/sentence-transformers/all-mpnet-base-v2] to embed each keyword into high-dimensional vectors. We then applied Principal Component Analysis (PCA) to reduce the dimensionality, selecting the first principal component. We ensured that the first eigenvalue explained at least 40% of the variance. Using a model like BERT helps preserve the semantic meaning of keywords as movies that have similar keywords will be closed together in the high dimensional embedded space. 
+
+- **Star Score**: We decided to aggregate cumulative star score from the numbers website, individual star score  represent points assigned to each of the leading stars of top 100 (based on domestic box office) movies in the current year and two preceding years. For appearing in the number one movie in a year a star gets 100 points, the number two movie 99 points and so on. This rewards actors for appearing in a number of hit films over the course of three years more than starring in just one monster hit over the same time period.
 
 By incorporating these features, we greatly expanded our pool of predictors and enhanced the expressiveness of our dataset for model training.
-
-### Star Score
-
-The Star Score feature aims to quantify the impact of cast, directors, and writers on a movie’s potential box-office performance by leveraging external “fame” data. In this section, we outline a general approach to computing and integrating Star Score into our modeling pipeline. As more detailed information becomes available—such as finalized name lists, precise scoring metrics from thenumbers.com, and actor metadata—this section will be updated and refined.
-
-Intuition: High-profile talent often drives audience interest and marketing reach, potentially boosting revenue.
-
-Objective: Create numerical features that capture both the presence of recognized industry figures (directors, writers) and the cumulative prominence of lead actors.
 
 ## Modeling Approaches
 
@@ -82,7 +85,7 @@ Objective: Create numerical features that capture both the presence of recognize
 
 We employed several linear modeling techniques:
 
--   **Ordinary Least Squares (OLS)**: Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prized for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
+-   **Ordinary Least Squares (OLS)**: Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prioritize for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
 
 -    **Elastic Net Regression**: Combination of L1 and L2 regularization, effectively handling multicollinearity.
 
@@ -94,46 +97,39 @@ Advanced nonlinear techniques included:
 -   **Random Forest Regressor**: Random Forest constructs an ensemble of decision trees on bootstrapped samples, each using random subsets of features at splits. By averaging predictions across many trees, it reduces variance and prevents overfitting. Its non‑parametric nature allows it to automatically capture complex nonlinearities and interactions among predictors without explicit feature engineering. Moreover, it provides feature importance scores, helping identify the most influential variables.
 -   **XGBoost**: XGBoost (Extreme Gradient Boosting) builds trees sequentially, where each new tree corrects errors from the ensemble so far. It uses second‑order gradient information and built‑in regularization (L1 and L2) to enhance predictive power while mitigating overfitting. XGBoost is optimized for speed and can handle large datasets efficiently, making it a standard for structured data tasks requiring high accuracy.
 
-Partial Dependence:
-
--   Trailer Likes (log): Roughly linear positive effect—more trailer engagement reliably boosts revenue expectations.
-
--   Budget (log): Nonlinear pattern—diminishing returns at mid‑range budgets, then a sharp rise for very large budgets (blockbusters).
-
--   Budget×Actor Interaction: A concave relationship—films with combined high budgets and star casts earn disproportionately more until a plateau.
-
--   Release Year: Gradual decline for the most recent releases, possibly reflecting market saturation or pandemic effects.
-
-Takeaway:
-
-GAM captures nuanced, nonlinear effects that OLS and Elastic Net cannot. The partial plots guide data‑driven decisions—e.g., optimal budget ranges and year effects.
-
-\
-Heteroskedasticity:
-
-Residuals fan out at higher fitted values. Next: Implement weighted least squares or use robust standard errors (HC3) in OLS.
-
 # Result
 
 In this section, we summarize the implemented modeling approaches, their performance outcomes, diagnostic evaluations, and clear next steps for further enhancement.
 
-## Linear Modeling Results
+## Model Performance
 
-### Ordinary Least Squares (OLS) Regression
+```{r result_table}
+result <- data.frame (
+  Model = c('OLS', 'Elastic Net', 'GAM', 'RFR', 'XGBoost'),
+  RMSE = c(10.33, 10.55, 10.07, 10.28, 9.79),
+  R2 = c(0.8153, 0.8075, 0.8244, 0.8171, 0.8438),
+  Training_Time_With_Hyperparameter_Tuning = c('500 ms','6 s','1 s','1 min','1 s')
+)
 
--   **RMSE:** 9.85 Million
+result %>%
+  kable(
+    caption = "Model Performance",
+    booktabs = TRUE,
+    align = c('l', rep('c', 5)),
+    col.names = c('Model', 'RMSE', 'R2', 'Training time (With Hyperparameter Tuning)')
+  ) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c('striped', 'condensed'),
+    font_size = 10,
+    latex_options = "HOLD_position"
+  )
+```
 
--   **R-Squared:** 0.83
+## Model Specific Detail/Diagnostic
 
--   **Cross-validated RMSE:** 19.43 Million
-
--   **Cross-validated R-Squared:** 0.79
+### OLS
 
 Violations (e.g., heteroskedasticity, collinearity) can lead to biased estimates or inflated variances.
-
-Target: Log‐transformed revenue, back‐transformed for RMSE/R-Squared computation
-
-Validation: 5‑fold KFold (chronological, no shuffle), using timeseriessplit().
 
 Diagnostic: Residuals vs Fitted shows clear heteroskedasticity (variance increases with fitted revenue).
 
@@ -141,26 +137,20 @@ Q‑Q plot exhibits heavy right tail—extreme overestimation for blockbusters.
 
 Histogram of residuals is sharply peaked with heavy tails.
 
-
-### Elastic Net Regression
-
--   **RMSE**: 10.07 Million
--   **R-Squared**: 0.82
-
-#### Insights:
+### Elastic Net
 
 -   Maintained interpretability: no coefficients driven to exact zero due to moderate L1 ratio.
 
 -   Elastic Net balanced accuracy and interpretability effectively amidst moderate multicollinearity.
 
-## Non-Linear Modeling Results
 
 ### Generalized Additive Model (GAM)
 
--   **RMSE**: 9.66 Million
--   **R-Squared**: 0.84
+```{r, fig.pos="H", echo=FALSE}
+knitr::include_graphics("GAM.png")
+```
 
-#### Key Nonlinear Effects based on the graph:
+#### Key Nonlinear Effects based on the GAM graph:
 
 -   **trailer_pca**: Linear positive impact; increased trailer engagement reliably raises revenue.
 -   **Budget (log)**: Exhibits diminishing returns at mid-range budgets, significant boost for blockbuster budgets.
@@ -171,23 +161,9 @@ GAM identified nuanced nonlinear patterns, highlighting complex interactions and
 
 ### Random Forest Regressor
 
--   **RMSE**: 9.64 Million
--   **R-Squared**: 0.8371
-
-#### Key Insights:
-
 -   Polynomial interactions and tuned hyperparameters improved capture of complex data relationships.
 
 -   Feature importance analysis strongly highlights PCA-derived trailer metrics as crucial predictors.
-
-### XGBoost with Time-based Data Split
-
--   **RMSE**: 9.45 Million
--   **R-Squared**: 0.8548
-
-#### Limitations:
-
-Computational constraints limited hyperparameter tuning and feature optimization. Significant performance improvements remain achievable with expanded computing resources.
 
 ### SQL Connection
 
@@ -216,7 +192,7 @@ We decide to create a Tableau Dashboard for exploratory data analysis purpose an
 
 # Discussion
 
-Across all methods—from OLS through GAM to Random Forest and XGBoost—we observed that increasing model flexibility yielded consistent gains in predictive accuracy. GAM achieved the highest R-squared (0.86) by capturing nuanced, nonlinear relationships (e.g., diminishing returns on mid‑range budgets, synergy between budget and star power).
+Across all methods—from OLS and GAM to Random Forest and XGBoost—we observed that greater model flexibility consistently improved predictive accuracy. We find that GAM strikes the best balance between performance (R-squared = 0.8244) and complexity (four terms) because it captures nuanced, nonlinear relationships, such as diminishing returns for mid-range budgets and the synergy between budget and star power.
 
 ### Challenges and Limitation
 
@@ -259,6 +235,9 @@ We have demonstrated a comprehensive workflow—spanning data collection, featur
 
 # Reference
 
+- Devlin, J., Chang, M., Lee, K., & Toutanova, K. (2018). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. arXiv (Cornell University). https://doi.org/10.48550/arxiv.1810.04805
 - IMDB. (2025). IMDb Non-Commercial Datasets. IMDB Developer. https://developer.imdb.com/non-commercial-datasets/
+- https://www.the-numbers.com/
+- https://huggingface.co/sentence-transformers/all-mpnet-base-v2
 - Sharma, A. S., Roy, T., Rifat, S. A., & Mridul, M. A. (2021). Presenting a larger up-to-date movie dataset and investigating the effects of pre-released attributes on gross revenue. Journal of Computer Science, 17(10), 870–888. https://doi.org/10.3844/jcssp.2021.870.888
 - Zhang, Y., Luo, X., & Yang, Y. (2009). Predicting movie success with machine learning techniques. International Journal of Computer Applications, 1(1), 1–6.​
