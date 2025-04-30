@@ -106,9 +106,10 @@ In this section, we summarize the implemented modeling approaches, their perform
 ```{r result_table}
 result <- data.frame (
   Model = c('OLS', 'Elastic Net', 'GAM', 'RFR', 'XGBoost'),
-  RMSE = c(10.33, 10.55, 10.07, 10.28, 9.79),
-  R2 = c(0.8153, 0.8075, 0.8244, 0.8171, 0.8438),
-  Training_Time_With_Hyperparameter_Tuning = c('500 ms','6 s','1 s','1 min','1 s')
+  RMSE = c(10.02, 10.17, 9.4, 10.25, 9.79),
+  R2 = c(0.8303, 0.8253, 0.8508, 0.8225, 0.8438),
+  Training_Time_With_Hyperparameter_Tuning = c('700 ms','10 s','1.1 s','1 m 55 s
+','2.9 s')
 )
 
 result %>%
@@ -161,7 +162,7 @@ GAM identified nuanced nonlinear patterns, highlighting complex interactions and
 
 ### Random Forest Regressor
 
--   Polynomial interactions and tuned hyperparameters improved capture of complex data relationships.
+-   Polynomial interactions does not improved model performance.
 
 -   Feature importance analysis strongly highlights PCA-derived trailer metrics as crucial predictors.
 
@@ -192,7 +193,7 @@ We decide to create a Tableau Dashboard for exploratory data analysis purpose an
 
 # Discussion
 
-Across all methods—from OLS and GAM to Random Forest and XGBoost—we observed that greater model flexibility consistently improved predictive accuracy. We find that GAM strikes the best balance between performance (R-squared = 0.8244) and complexity (four terms) because it captures nuanced, nonlinear relationships, such as diminishing returns for mid-range budgets and the synergy between budget and star power.
+Across all methods—from OLS and GAM to Random Forest and XGBoost—we observed that greater model flexibility consistently improved predictive accuracy. We find that GAM strikes the best balance between performance (R-squared = 0.8504) and complexity (four terms) because it captures nuanced, nonlinear relationships, such as diminishing returns for mid-range budgets and the synergy between budget and star power.
 
 ### Challenges and Limitation
 

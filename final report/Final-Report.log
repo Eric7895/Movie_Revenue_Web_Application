@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.17)  28 APR 2025 15:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.17)  30 APR 2025 13:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -577,7 +577,7 @@ Package pdftex.def Info: GAM.png  used on input line 382.
 <dashboard.png, id=58, 787.06548pt x 561.22173pt>
 File: dashboard.png Graphic file (type png)
 <use dashboard.png>
-Package pdftex.def Info: dashboard.png  used on input line 450.
+Package pdftex.def Info: dashboard.png  used on input line 449.
 (pdftex.def)             Requested size: 469.74492pt x 334.9544pt.
 
 
@@ -602,7 +602,7 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 8191
  89i,8n,93p,542b,508s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb>
-Output written on Final-Report.pdf (8 pages, 587875 bytes).
+Output written on Final-Report.pdf (8 pages, 587864 bytes).
 PDF statistics:
  222 PDF objects out of 1000 (max. 8388607)
  188 compressed objects within 2 object streams
