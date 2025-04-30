@@ -81,7 +81,7 @@ def predict_revenue(model_name: Literal["MLR", "elastic_net", "rf", "GAM", "XGBo
         print("No unreleased movies found – nothing to predict.")
         return
     
-    encoded_df = fe_main(unreleased_df) # Encode all features
+    encoded_df = fe_main(unreleased_df, adjust_cpi=False) # Encode all features
     
     df_clean = encoded_df[(unreleased_df['trailer_views'] >= 0) & (unreleased_df['trailer_likes'] >= 0)].copy()
     df_clean['release_date'] = pd.to_datetime(df_clean['release_date'], errors='coerce')
@@ -99,7 +99,7 @@ def predict_revenue(model_name: Literal["MLR", "elastic_net", "rf", "GAM", "XGBo
     df_selected['actor_score_log'] = np.log1p(df_selected['actor_score'])
     df_selected['budget_actor_interaction'] = df_selected['budget_log'] * df_selected['actor_score_log']
     df_selected = df_selected[['trailer_views_log', 'trailer_likes_log', 'budget_log', 'budget_actor_interaction',
-              'release_year_centered', 'revenue']]
+              'release_year_centered']]
     
     # PCA for trailer views and likes
     pca = PCA(n_components=1)
@@ -110,7 +110,7 @@ def predict_revenue(model_name: Literal["MLR", "elastic_net", "rf", "GAM", "XGBo
     df_selected.drop(columns=['trailer_views_log', 'trailer_likes_log'], inplace=True)
 
     if needs_poly:
-        poly = load(MODEL_DIR / "poly.joblib")
+        poly = load(MODEL_DIR / "poly_features.joblib")
         poly_features = poly.transform(df_selected)
         df_selected = pd.DataFrame(poly_features, columns=poly.get_feature_names_out(['trailer_pca', 'budget_log', 'budget_actor_interaction', 'release_year_centered']))
     

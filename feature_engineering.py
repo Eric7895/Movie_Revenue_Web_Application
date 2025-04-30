@@ -262,7 +262,7 @@ def encode_keyword(df: pd.DataFrame, verbose: bool = False) -> pd.DataFrame:
 #           Main
 # ==============================
 
-def main(movie_stg0: pd.DataFrame, verbose=False, year: int = 2025):
+def main(movie_stg0: pd.DataFrame, verbose=False, year: int = 2025, adjust_cpi: bool = True):
     path = 'raw data/the_most_popular_director_imdb.csv'
 
     year_list = [year - i for i in range(5)]
@@ -331,10 +331,15 @@ def main(movie_stg0: pd.DataFrame, verbose=False, year: int = 2025):
     if verbose:
         print("Phase 1 completed: Aggregated all encoded features into movie_stg1")
 
-    # Phase 2: CPI adjustment (movie_stg2)p
-    movie_stg2 = CPI_adjustment(movie_stg1.copy())
-    if verbose:
-        print("Phase 2 completed: Applied CPI adjustment to create movie_stg2")
+    # Phase 2: CPI adjustment (movie_stg2)
+    if not adjust_cpi:
+        movie_stg2 = movie_stg1.copy()
+        if verbose:
+            print("Skipped Phase 2: CPI adjustment")
+    else:
+        movie_stg2 = CPI_adjustment(movie_stg1.copy())
+        if verbose:
+            print("Phase 2 completed: Applied CPI adjustment to create movie_stg2")
 
     # Phase 3: Keyword encoding using BERT (movie_stg3)
     movie_stg3 = encode_keyword(movie_stg2.copy(), verbose=verbose).drop_duplicates(['name'])
