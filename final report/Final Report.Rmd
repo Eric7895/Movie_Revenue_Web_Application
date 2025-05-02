@@ -166,9 +166,35 @@ GAM identified nuanced nonlinear patterns, highlighting complex interactions and
 
 ### Random Forest Regressor
 
+```{r, fig.pos="H", echo=FALSE}
+knitr::include_graphics("rfr_importance.png")
+```
+
 -   Polynomial interactions does not improved model performance.
 
--   Feature importance analysis strongly highlights PCA-derived trailer metrics as crucial predictors.
+-   Feature importance analysis strongly highlights PCA-derived trailer metrics
+as crucial predictors.
+
+### XGboost
+
+```{r, fig.pos="H", echo=FALSE}
+knitr::include_graphics("xg_importance.png")
+```
+
+- Audience Engagement(above 40%): Trailer likes is the strongest importance predictor, far outweighing traditional metrices. 
+
+- Temporal Factors: Release year has major effect, reflecting market evolution over time
+
+- Genre Preference: Adventure, Action, and Horror movies showed a higher significance compared to other genres. 
+
+#### Implications
+
+- Marketing strategies should prioritize trailer engagement 
+
+- Revenue forecasts need to account for yearly trend
+
+- Traditional factors like budget has limit impact 
+
 
 ## SQL Connection
 
