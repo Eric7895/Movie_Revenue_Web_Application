@@ -43,9 +43,9 @@ In addition to building our predictive model, we plan to deploy it in a user-fri
 
 Research on movie revenue prediction has gained traction over the past decade, drawing from a wide range of machine learning and econometric methods. Much of the early work focused on linear regression and decision trees using metadata such as budget, genre, release date, and star power. For instance, Zhang et al. (2009) had a simplified approach using mainly decision trees to segment films into high- and low-performing categories. Their approach emphasized interpretability and offered producers a rule-based system for understanding which combinations of factors (e.g., genre, seasonality, sequel status) increased the likelihood of financial success. This paper also introduced methodology for computing monetary features into real dollar amounts using a Consumer Price Index translation. While effective for categorical classification, the model did not estimate continuous revenue values, and therefore produced unsatisfactory results(59.73% R\^2)—highlighting a gap in regression-based modeling that our study seeks to address.
 
-Sen Sharma et al. (2021) provided foundational research for predicting box office success using pre-release metadata. They introduced a large-scale dataset and used various machine learning models—including logistic regression, random forests, and neural networks—to classify movies into revenue brackets. Their study emphasized the importance of features like budget, star power, genre, and release month, and proposed a novel method to quantify star power using historical success and IMDb metrics.
+Sen Sharma et al. (2021) provided foundational research for predicting box office success using pre-release metadata. They introduced a large-scale dataset and used various machine learning models—including logistic regression, random forests, and neural networks—to classify movies into revenue brackets. Their study emphasized the importance of features like budget, star power, genre, and release month, and proposed a novel method to quantify star power using historical success and IMDb metrics. Moreover, Madongo's research is done over a hybrid deep learning model that combines visual features from movie posters with metadata for improved prediction (Madongo, 2023). Their corresponding accuracy metrics are 60% (Sharma) and 59.3% (Madongo)
 
-We wanted to build on this foundation to build a project that combines the most successful elements of these other projects to create an optimal solution that would lead to better results. Importantly, it also includes actor and director scoring mechanisms based on historical box office performance, introducing domain-specific enhancements to the feature set. These design choices informed our own approach, particularly in how we engineered similar role-based features to reflect past project success and career consistency, such as star score.
+We wanted to build on this foundation to build a project that combines the most successful elements of these other projects to create an optimal solution that would lead to better results. Importantly, it also includes actor and director scoring mechanisms based on historical box office performance, introducing domain-specific enhancements to the feature set, like audience engagement metrics (trailer view/likes). These design choices informed our own approach, particularly in how we engineered similar role-based features to reflect past project success and career consistency, such as star score.
 
 Our approach emphasized robust feature engineering (e.g., primary writer/director extraction, trailer engagement metrics), regularization techniques to address multicollinearity, and cross-validation to benchmark competing models. By extending these methodologies with improved runtime-budget interactions and leveraging more granular genre encoding, we aimed to close gaps in past approaches and improve generalizability to upcoming releases.
 
@@ -61,7 +61,7 @@ Additionally, we attempted to scrape actor, director, and writer "billboards" fo
 
 Moving on to data processing, we removed all movies with null values and still retained a relatively sufficient number of records for model training. We also eliminated duplicate entries by using a composite identifier of movie title and release date. After cleaning the data, we began feature engineering. Our encoding approaches for each categorical variable are as follows:
 
--   **Director and Writer**: We counted the total number of famous directors and writers associated with each movie, based on their appearance in our billboard lists.
+-   **Director and Writer**: We counted the total number of famous directors and writers associated with each movie, based on their appearance in a well known billboard lists (98k views).
 
 -   **Actor**: In addition to counting the number of famous actors, we also computed the cumulative star score for each movie.
 
@@ -85,17 +85,17 @@ By incorporating these features, we greatly expanded our pool of predictors and 
 
 We employed several linear modeling techniques:
 
--   **Ordinary Least Squares (OLS)**: Ordinary Least Squares (OLS) is the foundational linear regression technique. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prioritize for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
+-   **Ordinary Least Squares (OLS)**: Ordinary Least Squares (OLS) is the foundational linear regression technique^[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html]. It fits a hyperplane that minimizes the sum of squared residuals (differences between observed and predicted values). OLS is prioritize for its simplicity and interpretability—each coefficient represents the expected change in the target (revenue) for a one‑unit change in the predictor, holding others constant. However, OLS assumes:
 
--    **Elastic Net Regression**: Combination of L1 and L2 regularization, effectively handling multicollinearity.
+-    **Elastic Net Regression**: Combination of L1 and L2 regularization, effectively handling multicollinearity^[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html].
 
 ### Nonlinear Models
 
 Advanced nonlinear techniques included:
 
--   **Generalized Additive Models (GAM)**: Extended linear modeling using spline functions for capturing nonlinear effects.
--   **Random Forest Regressor**: Random Forest constructs an ensemble of decision trees on bootstrapped samples, each using random subsets of features at splits. By averaging predictions across many trees, it reduces variance and prevents overfitting. Its non‑parametric nature allows it to automatically capture complex nonlinearities and interactions among predictors without explicit feature engineering. Moreover, it provides feature importance scores, helping identify the most influential variables.
--   **XGBoost**: XGBoost (Extreme Gradient Boosting) builds trees sequentially, where each new tree corrects errors from the ensemble so far. It uses second‑order gradient information and built‑in regularization (L1 and L2) to enhance predictive power while mitigating overfitting. XGBoost is optimized for speed and can handle large datasets efficiently, making it a standard for structured data tasks requiring high accuracy.
+-   **Generalized Additive Models (GAM)**: Extended linear modeling using spline functions for capturing nonlinear effects^[https://pygam.readthedocs.io/en/latest/].
+-   **Random Forest Regressor (RFR)**: Random Forest constructs an ensemble of decision trees on bootstrapped samples, each using random subsets of features at splits. By averaging predictions across many trees, it reduces variance and prevents overfitting. Its non‑parametric nature allows it to automatically capture complex nonlinearities and interactions among predictors without explicit feature engineering. Moreover, it provides feature importance scores, helping identify the most influential variables^[https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html].
+-   **XGBoost**: XGBoost (Extreme Gradient Boosting) builds trees sequentially, where each new tree corrects errors from the ensemble so far. It uses second‑order gradient information and built‑in regularization (L1 and L2) to enhance predictive power while mitigating overfitting. XGBoost is optimized for speed and can handle large datasets efficiently, making it a standard for structured data tasks requiring high accuracy^[https://xgboost.readthedocs.io/en/stable/python/python_intro.html].
 
 # Result
 
@@ -129,6 +129,10 @@ result %>%
 ## Model Specific Detail/Diagnostic
 
 ### OLS
+
+```{r, fig.pos="H", echo=FALSE}
+knitr::include_graphics("diagnostic_ols.png")
+```
 
 Violations (e.g., heteroskedasticity, collinearity) can lead to biased estimates or inflated variances.
 
@@ -166,7 +170,7 @@ GAM identified nuanced nonlinear patterns, highlighting complex interactions and
 
 -   Feature importance analysis strongly highlights PCA-derived trailer metrics as crucial predictors.
 
-### SQL Connection
+## SQL Connection
 
 We successfully implemented a MySQL database, which allows our data to benefit from its Atomicity, Consistency, Isolation, and Durability (ACID) properties. These properties help ensure that each transaction is reliable, errors don’t leave the data in an inconsistent state, concurrent processes don’t conflict, and changes are permanently saved once committed.
 
@@ -174,13 +178,13 @@ Beyond ACID, the database also improves performance and scalability. With a well
 
 The database also integrates well with the website: the upload function checks for duplicate records, and we’ve built API endpoints for deleting and updating data. This makes it easy to manage content in real time without compromising accuracy or stability.
 
-### Website Navigation
+## Website Navigation
 
-By having a database connection, we implemented website functionality using the FastAPI framework. The FastAPI Python module allows us to quickly set up a basic functioning website that supports Create, Read, Update, and Delete (CRUD) endpoints.
+By having a database connection, we implemented website functionality using the FastAPI framework. The FastAPI Python module allows us to quickly set up a basic functioning website that supports Create, Read, Update, and Delete (CRUD) endpoints. These operations allows the user to effectively communicate with the data source and update/correct incorrect information without having to scroll through the csv file. 
 
 To further enhance website functionality, we also experimented with CSS styling and JavaScript functions to toggle some of the API endpoints and other features, such as uploading new data and making predictions. We hope this will enhance the user experience with the prediction model.
 
-### Tabelau Dashboard
+## Tabelau Dashboard
 
 ```{r, fig.pos="H", echo=FALSE}
 knitr::include_graphics("dashboard.png")
@@ -193,7 +197,7 @@ We decide to create a Tableau Dashboard for exploratory data analysis purpose an
 
 # Discussion
 
-Across all methods—from OLS and GAM to Random Forest and XGBoost—we observed that greater model flexibility consistently improved predictive accuracy. We find that GAM strikes the best balance between performance (R-squared = 0.8504) and complexity (four terms) because it captures nuanced, nonlinear relationships, such as diminishing returns for mid-range budgets and the synergy between budget and star power.
+Across all methods—from OLS and GAM to Random Forest and XGBoost—we observed that greater model flexibility consistently improved predictive accuracy. We find that GAM strikes the best balance between performance (R-squared = 0.8504) and complexity (four terms) because it captures nuanced, nonlinear relationships, such as diminishing returns for mid-range budgets and the synergy between budget and star power by fitting each of the covariates to the response variable using a smooth function and take the additive sum of the partial contribution.
 
 ### Challenges and Limitation
 
@@ -217,7 +221,7 @@ In addition, some of our engineered features (e.g., trailer embeddings via PCA, 
 
 -   Heteroskedasticity Correction: Implement Weighted Least Squares or robust standard errors in OLS/Elastic Net to stabilize error variance for blockbusters.
 
--   Outlier Management: Compute Cook’s distance to identify influential observations; apply Winsorization or conditional trimming to mitigate distortion.
+-   Outlier Management: Compute Cook’s distance^[a statistical measure that quantifies the influence of individual data points on a regression model. It helps identify data points that, if removed, would significantly alter the model's predictions or parameter estimates] to identify influential observations; apply Winsorization or conditional trimming to mitigate distortion.
 
 -   GAM Optimization: Tune the number and placement of spline knots for each predictor to push R-squared beyond 0.86.
 
@@ -237,8 +241,7 @@ We have demonstrated a comprehensive workflow—spanning data collection, featur
 # Reference
 
 - Devlin, J., Chang, M., Lee, K., & Toutanova, K. (2018). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. arXiv (Cornell University). https://doi.org/10.48550/arxiv.1810.04805
-- IMDB. (2025). IMDb Non-Commercial Datasets. IMDB Developer. https://developer.imdb.com/non-commercial-datasets/
-- https://www.the-numbers.com/
-- https://huggingface.co/sentence-transformers/all-mpnet-base-v2
+- Madongo, C.T., Zhongjun, T. A movie box office revenue prediction model based on deep multimodal features. Multimed Tools Appl 82, 31981–32009 (2023). https://doi.org/10.1007/s11042-023-14456-4
 - Sharma, A. S., Roy, T., Rifat, S. A., & Mridul, M. A. (2021). Presenting a larger up-to-date movie dataset and investigating the effects of pre-released attributes on gross revenue. Journal of Computer Science, 17(10), 870–888. https://doi.org/10.3844/jcssp.2021.870.888
 - Zhang, Y., Luo, X., & Yang, Y. (2009). Predicting movie success with machine learning techniques. International Journal of Computer Applications, 1(1), 1–6.​
+

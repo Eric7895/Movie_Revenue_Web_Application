@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.17)  30 APR 2025 13:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.17)  2 MAY 2025 13:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -558,54 +558,62 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 [1
 
 {c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 226.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 230.
 (c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 
-[2{c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+[2]
 
-[3]
-<GAM.png, id=45, 434.74922pt x 86.94984pt>
-File: GAM.png Graphic file (type png)
-<use GAM.png>
-Package pdftex.def Info: GAM.png  used on input line 382.
-(pdftex.def)             Requested size: 434.76805pt x 86.95358pt.
+[3{c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+<diagnostic_ols.png, id=57, 617.68266pt x 502.50235pt>
+File: diagnostic_ols.png Graphic file (type png)
+<use diagnostic_ols.png>
+Package pdftex.def Info: diagnostic_ols.png  used on input line 361.
+(pdftex.def)             Requested size: 469.77357pt x 382.17412pt.
 
 
 [4]
-<dashboard.png, id=58, 787.06548pt x 561.22173pt>
+<GAM.png, id=70, 434.74922pt x 86.94984pt>
+File: GAM.png Graphic file (type png)
+<use GAM.png>
+Package pdftex.def Info: GAM.png  used on input line 388.
+(pdftex.def)             Requested size: 434.76805pt x 86.95358pt.
+
+
+[5 <./diagnostic_ols.png>]
+<dashboard.png, id=79, 787.06548pt x 561.22173pt>
 File: dashboard.png Graphic file (type png)
 <use dashboard.png>
-Package pdftex.def Info: dashboard.png  used on input line 449.
+Package pdftex.def Info: dashboard.png  used on input line 457.
 (pdftex.def)             Requested size: 469.74492pt x 334.9544pt.
 
 
-[5 <./GAM.png>]
+[6 <./GAM.png>]
 
-[6 <./dashboard.png>]
+[7 <./dashboard.png>]
 
-[7]
+[8]
 
-[8] (./Final-Report.aux)
+[9] (./Final-Report.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-03-26>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 12972 strings out of 471607
- 202114 string characters out of 5519714
- 598715 words of memory out of 5000000
- 39254 multiletter control sequences out of 15000+600000
+ 12986 strings out of 471607
+ 202361 string characters out of 5519714
+ 599715 words of memory out of 5000000
+ 39261 multiletter control sequences out of 15000+600000
  682690 words of font info for 85 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  89i,8n,93p,542b,508s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/wue77/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb>
-Output written on Final-Report.pdf (8 pages, 587864 bytes).
+Output written on Final-Report.pdf (9 pages, 916696 bytes).
 PDF statistics:
- 222 PDF objects out of 1000 (max. 8388607)
- 188 compressed objects within 2 object streams
- 41 named destinations out of 1000 (max. 500000)
- 195 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 244 PDF objects out of 1000 (max. 8388607)
+ 206 compressed objects within 3 object streams
+ 48 named destinations out of 1000 (max. 500000)
+ 200 words of extra memory for PDF output out of 10000 (max. 10000000)
 

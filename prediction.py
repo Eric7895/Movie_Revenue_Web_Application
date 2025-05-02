@@ -57,9 +57,9 @@ def predict_xgboost(X: np.ndarray) -> np.ndarray:
 
 # Map option strings to the corresponding prediction function and whether the model expects polynomial features.
 PREDICTORS: dict[str, tuple[callable, bool]] = {
-    "MLR": (predict_mlr, True),
-    "elastic_net": (predict_elastic_net, True),
-    "rf": (predict_random_forest, False),
+    "MLR": (predict_mlr, False),
+    "elastic_net": (predict_elastic_net, False),
+    "rf": (predict_random_forest, True),
     "GAM": (predict_gam, False),
     "XGBoost": (predict_xgboost, False),
 }
