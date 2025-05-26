@@ -41,3 +41,8 @@ End Project: To deliver a web application supporting CRUD operation from data so
 3) Run populate_data.py to get the latest information (Restricted by our raw file, we should be able to re-update the information once we figure out the source of the raw data file 'Movie_data.csv').
 4) Run populate_database.py to populate (insert) the data to the MySQL database.
 5) Run movie_API.py
+---
+## How to access prediction result
+1) Upload a csv file align with database properties (Should be "Not released" movies)
+2) Choose a predictive button
+3) Search for "Not released" movie in parameter search 
