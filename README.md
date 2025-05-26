@@ -1,6 +1,6 @@
 # Movie Revenue Web Application
 
-
+![Alt text](image/website_screenshot.png)
 
 ## Objective ✔️
 
