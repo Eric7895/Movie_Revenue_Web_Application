@@ -2,14 +2,13 @@ import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.decomposition import PCA
-import cpi 
+
 import os
 from scraper.actor_bill_board_scraper import actor_scraper
 from sqlalchemy.orm import sessionmaker
 from models import Movies, Base
 from db import get_engine
 from populate_data import main_merge
-cpi.update()
 
 # ==============================
 #           HELPERS
@@ -19,6 +18,8 @@ def CPI_adjustment(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Convert budget and revenue to real dollar (CPI conversion)
     '''
+    import cpi 
+    cpi.update()
     df = df.copy()  # Avoid modifying the original DataFrame
     
     # Extract the year from release_date

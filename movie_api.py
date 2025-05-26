@@ -9,6 +9,7 @@ from urllib.parse import unquote
 import pandas as pd
 import math       
 import pandas as pd
+import prediction as ml_pred
 
 import uvicorn
 
@@ -385,6 +386,18 @@ def delete_movie(title: str,
     db.commit()
 
     return {"message": "Movie deleted successfully"}
+
+@app.post("/predict/{model_parameter}")
+def prediction(model_parameter: str):
+    try:
+        cap_model = model_parameter.upper()
+        msg = ml_pred.predict_revenue(cap_model)  # returns a str message
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {e}")
+
+    return {"message": msg}
 
 # Fixed vs code path error using "set PATH=%CONDA_PREFIX%\Scripts;%PATH%"
 # Kill the app using "taskkill /IM uvicorn.exe /F"

@@ -38,8 +38,7 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
 });
 
 // Upload feature
-document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevent default form submission
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {e.preventDefault(); // Prevent default form submission
 
     const fileInput = document.getElementById('fileInput');
     if (!fileInput.files.length) {
@@ -142,4 +141,24 @@ function displayResults(movies) {
 
     table.appendChild(tbody);
     resultsContainer.appendChild(table);
+}
+
+const predictForm = document.getElementById('predictForm');
+if (predictForm) {
+  predictForm.addEventListener('submit', async (e) => {e.preventDefault();
+    const model = document.getElementById('modelSelect').value;
+    const msgBox = document.getElementById('pred_message');
+    msgBox.textContent = '';
+
+    if (!model) { msgBox.textContent = 'Select a model first'; return; }
+
+    try {
+      const res = await fetch(`/predict/${model}`, { method: 'POST' });
+      const data = await res.json();
+      msgBox.textContent = res.ok ? data.message : `Error: ${data.detail}`;
+    } catch (err) {
+      console.error(err);
+      msgBox.textContent = 'Prediction failed (see console)';
+    }
+  });
 }

@@ -61,8 +61,6 @@ def unmasked_director_writer(df: pd.DataFrame, name_dict: dict) -> pd.DataFrame:
 
     return df_copy
 
-import pandas as pd
-
 def get_actor_info(df: pd.DataFrame, name_dict: dict, title_dict: dict) -> pd.DataFrame:
     """
     Retrieve actor information for each movie using principals.tsv.
@@ -99,7 +97,6 @@ def get_actor_info(df: pd.DataFrame, name_dict: dict, title_dict: dict) -> pd.Da
         processed_data.append({'title': title, 'actors': actor_string})
 
     return pd.DataFrame(processed_data)
-
 
 def download_and_extract_imdb_data(url: str, dest_folder: str) -> None:
     """

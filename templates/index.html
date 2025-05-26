@@ -51,6 +51,26 @@
                 <div id="uploadMessage"></div>
             </section>
 
+            <section class="prediction">
+            <h2>Select Prediction Algorithm</h2>
+            <p>This will trigger the prediction algorithm to run on all “Not Released” records.</p>
+
+            <form id="predictForm" class="predict-form">
+                <label for="modelSelect">Algorithm</label>
+                <select id="modelSelect" required>
+                <option value="">--Select--</option>
+                <option value="MLR">Multiple Linear Regression</option>
+                <option value="EN">Elastic Net</option>
+                <option value="RF">Random Forest</option>
+                <option value="GAM">GAM</option>
+                <option value="XG">XGBoost</option>
+                </select>
+
+                <button type="submit" class="pred-btn">Predict</button>
+                <div id="pred_message" class="action-msg"></div>
+            </form>
+            </section>
+
             <section class="quick-search">
                 <h2>Parameter Search</h2>
                 <form id="searchForm" action="/search" method="GET">
